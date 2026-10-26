@@ -13,6 +13,13 @@ enum DemoMode {
         let config = demoConfig
 
         dependencies.configStore = .inMemory(config)
+        dependencies.language = LanguageClient(
+            choice: { .system },
+            setChoice: { _ in },
+            active: { Bundle.main.preferredLocalizations.first.map { String($0.prefix(2)) } ?? "en" },
+            systemPreferred: { Bundle.main.preferredLocalizations.first.map { String($0.prefix(2)) } ?? "en" },
+            relaunch: {}
+        )
         dependencies.metricsStore = MetricsStore(load: { [] }, save: { _ in })
         dependencies.keychain = .inMemory([config.login: "demo-password"])
         dependencies.appLog = AppLog(write: { _ in }, url: { URL(fileURLWithPath: "/dev/null") })

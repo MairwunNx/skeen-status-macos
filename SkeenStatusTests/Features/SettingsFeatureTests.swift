@@ -72,4 +72,26 @@ struct SettingsFeatureTests {
         #expect(store.state.password == "")
         #expect(store.state.config.gateway == "10.0.0.1")
     }
+
+    @Test func pickingAnotherLanguageAsksForARelaunch() async {
+        let stored = LockIsolated<AppLanguage?>(nil)
+        var state = SettingsFeature.State()
+        state.$config = Shared(value: .default)
+        let store = TestStore(initialState: state) {
+            SettingsFeature()
+        } withDependencies: {
+            $0.keychain = .inMemory()
+            $0.loginItem = LoginItem(isEnabled: { false }, setEnabled: { _ in })
+            $0.language.setChoice = { stored.setValue($0) }
+        }
+        store.exhaustivity = .off
+
+        await store.send(.onAppear)
+        #expect(store.state.needsRelaunch == false)
+        await store.send(.languageChanged(.russian))
+        #expect(stored.value == .russian)
+        #expect(store.state.needsRelaunch)
+        await store.send(.languageChanged(.system))
+        #expect(store.state.needsRelaunch == false)
+    }
 }
