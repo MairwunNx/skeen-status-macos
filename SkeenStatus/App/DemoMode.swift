@@ -102,6 +102,7 @@ enum DemoMode {
     private static var demoConfig: Config {
         var config = Config.default
         config.hostKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDemoDemoDemoDemoDemoDemoDemoDemoDemoDemo"
+        config.launchAtLogin = true
         config.onDownScripts = ["osascript -e 'display notification \"VPN off\"'"]
         return config
     }
