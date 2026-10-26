@@ -1,13 +1,22 @@
+import ComposableArchitecture
 import Foundation
 
-nonisolated struct LocalCommandResult: Sendable {
+struct LocalCommandResult: Equatable, Sendable {
     var exitCode: Int32
     var output: String
 }
 
-/// Runs scenario commands locally on the Mac via `/bin/sh -c`.
-nonisolated enum LocalShell {
-    static func run(_ command: String) async -> LocalCommandResult {
+/// Runs scenario commands locally on the Mac via `/bin/sh -c`, never on the
+/// router.
+@DependencyClient
+struct LocalShell: Sendable {
+    var run: @Sendable (_ command: String) async -> LocalCommandResult = { _ in
+        LocalCommandResult(exitCode: 0, output: "")
+    }
+}
+
+extension LocalShell: DependencyKey {
+    static let liveValue = LocalShell(run: { command in
         await withCheckedContinuation { continuation in
             DispatchQueue.global(qos: .utility).async {
                 let process = Process()
@@ -30,12 +39,20 @@ nonisolated enum LocalShell {
 
                 let data = pipe.fileHandleForReading.readDataToEndOfFile()
                 process.waitUntilExit()
-                let output = String(data: data, encoding: .utf8) ?? ""
                 continuation.resume(returning: LocalCommandResult(
                     exitCode: process.terminationStatus,
-                    output: output
+                    output: String(data: data, encoding: .utf8) ?? ""
                 ))
             }
         }
+    })
+
+    static let testValue = LocalShell()
+}
+
+extension DependencyValues {
+    var localShell: LocalShell {
+        get { self[LocalShell.self] }
+        set { self[LocalShell.self] = newValue }
     }
 }
