@@ -6,6 +6,14 @@ nonisolated enum MatchMode: String, Codable, Sendable, CaseIterable {
     case regex
 }
 
+/// How the poller tells running from stopped in the status output.
+nonisolated enum StatusDetection: String, Codable, Sendable, CaseIterable {
+    /// Reads skeen's own output: a `PID:` line or the word `running`.
+    case automatic
+    /// Matches the user's `RunningRule`.
+    case rule
+}
+
 /// The rule that decides whether the status output means the service is running.
 nonisolated struct RunningRule: Codable, Equatable, Sendable {
     var pattern: String
@@ -21,6 +29,7 @@ nonisolated struct Config: Codable, Equatable, Sendable {
     var postConnectCommands: [String]
     var skeenCommand: String
     var statusCommand: String
+    var statusDetection: StatusDetection
     var runningRule: RunningRule
     var intervalSeconds: Int
     var logFilePath: String
@@ -37,6 +46,7 @@ nonisolated struct Config: Codable, Equatable, Sendable {
         postConnectCommands: ["exec sh"],
         skeenCommand: "skeen",
         statusCommand: "skeen status",
+        statusDetection: .automatic,
         runningRule: RunningRule(pattern: "Status: running", mode: .substring),
         intervalSeconds: 15,
         logFilePath: "/opt/var/log/sing-box.log",
@@ -64,6 +74,7 @@ nonisolated extension Config {
         postConnectCommands = try c.decodeIfPresent([String].self, forKey: .postConnectCommands) ?? d.postConnectCommands
         skeenCommand = try c.decodeIfPresent(String.self, forKey: .skeenCommand) ?? d.skeenCommand
         statusCommand = try c.decodeIfPresent(String.self, forKey: .statusCommand) ?? d.statusCommand
+        statusDetection = try c.decodeIfPresent(StatusDetection.self, forKey: .statusDetection) ?? d.statusDetection
         runningRule = try c.decodeIfPresent(RunningRule.self, forKey: .runningRule) ?? d.runningRule
         intervalSeconds = try c.decodeIfPresent(Int.self, forKey: .intervalSeconds) ?? d.intervalSeconds
         logFilePath = try c.decodeIfPresent(String.self, forKey: .logFilePath) ?? d.logFilePath

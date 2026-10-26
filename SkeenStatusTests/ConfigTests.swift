@@ -10,6 +10,7 @@ struct ConfigTests {
         #expect(config.gateway == "192.168.1.1")
         #expect(config.port == 2022)
         #expect(config.statusCommand == "skeen status")
+        #expect(config.statusDetection == .automatic)
         #expect(config.runningRule == RunningRule(pattern: "Status: running", mode: .substring))
         #expect(config.intervalSeconds == 15)
         #expect(config.postConnectCommands == ["exec sh"])
@@ -28,6 +29,13 @@ struct ConfigTests {
         #expect(config.intervalSeconds == 30)
         #expect(config.port == Config.default.port)
         #expect(config.statusCommand == Config.default.statusCommand)
+    }
+
+    @Test func olderConfigWithoutDetectionDetectsAutomatically() throws {
+        let json = #"{"runningRule":{"pattern":"запущен","mode":"substring"}}"#
+        let config = try JSONDecoder().decode(Config.self, from: Data(json.utf8))
+        #expect(config.statusDetection == .automatic)
+        #expect(config.runningRule.pattern == "запущен")
     }
 
     @Test func encodeDecodeRoundTrips() throws {

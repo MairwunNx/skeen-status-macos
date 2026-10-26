@@ -150,7 +150,7 @@ final class Engine {
             )
             let preview = raw.replacingOccurrences(of: "\n", with: " | ").prefix(200)
             AppLog.shared.log("status output: \(preview)")
-            newState = parseStatus(raw, rule: config.runningRule)
+            newState = parseStatus(raw, detection: config.statusDetection, rule: config.runningRule)
             appState.lastError = nil
         } catch {
             newState = .unreachable

@@ -141,15 +141,26 @@ struct SettingsView: View {
                         .gridCellColumns(2)
                 }
                 GridRow {
-                    Text("Признак \"running\"")
-                    TextField("Status: running", text: $draft.runningRule.pattern)
-                        .textFieldStyle(.roundedBorder)
-                    Picker("", selection: $draft.runningRule.mode) {
-                        Text("substring").tag(MatchMode.substring)
-                        Text("regex").tag(MatchMode.regex)
+                    Text("Как понять, что работает")
+                    Picker("", selection: $draft.statusDetection) {
+                        Text("Автоматически").tag(StatusDetection.automatic)
+                        Text("По своему правилу").tag(StatusDetection.rule)
                     }
                     .labelsHidden()
-                    .frame(width: 130)
+                    .gridCellColumns(2)
+                }
+                if draft.statusDetection == .rule {
+                    GridRow {
+                        Text("Признак «running»")
+                        TextField("Status: running", text: $draft.runningRule.pattern)
+                            .textFieldStyle(.roundedBorder)
+                        Picker("", selection: $draft.runningRule.mode) {
+                            Text("substring").tag(MatchMode.substring)
+                            Text("regex").tag(MatchMode.regex)
+                        }
+                        .labelsHidden()
+                        .frame(width: 130)
+                    }
                 }
                 GridRow {
                     Text("Интервал опроса")
