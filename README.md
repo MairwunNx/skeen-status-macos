@@ -23,6 +23,7 @@ The app keeps one SSH session to the router and asks `skeen status` every 15 sec
 - 🧭 **Reads skeen, not its wording**: skeen 5 prints its status in Russian and in color, and the app reads it all the same. A live Clash API proves sing-box runs even when SSH drops.
 - 🔐 **Safe by default**: the password lives in the Keychain, the router’s host key is pinned on first connect, and a changed key stops the app from talking to an impostor.
 - 📦 **Move to another Mac in one file**: export the settings, the password, and the pinned key in a file sealed with a passphrase you choose.
+- 🌐 **English and Russian**: the app follows macOS, or pick a language in **General**. System Settings → General → Language & Region → Applications works too.
 - 🪟 **Liquid Glass**: the window uses macOS 26’s native glass, and the status orb is a Metal shader of flowing waves.
 
 ## Get started
@@ -34,8 +35,8 @@ The app keeps one SSH session to the router and asks `skeen status` every 15 sec
    curl -fsSL https://raw.githubusercontent.com/MairwunNx/skeen-status-macos/master/scripts/install.sh | bash
    ```
 
-3. Click the dot in the menu bar, open **Настройки…**, and enter the router’s address, SSH port, login, and password. The defaults fit a stock skeen setup: `192.168.1.1`, port `2022`, user `admin`.
-4. Press **Проверить связь**, then **Сохранить**. The dot turns green within seconds.
+3. Click the dot in the menu bar, open **Settings…**, and enter the router’s address, SSH port, login, and password. The defaults fit a stock skeen setup: `192.168.1.1`, port `2022`, user `admin`.
+4. Press **Test Connection**, then **Save**. The dot turns green within seconds.
 
 The app starts in the menu bar only and has no Dock icon. Open it again from Finder or Spotlight to bring the window up.
 
@@ -54,13 +55,13 @@ The app starts in the menu bar only and has no Dock icon. Open it again from Fin
 
 ## How it tells running from stopped
 
-skeen prints a `PID:` line only while sing-box runs, and the words `running` and `stopped` survive every translation. The app looks for those, so a new skeen release that rewords its output doesn’t break it. If your setup prints something else, pick **По своему правилу** in the connection settings and give a substring or a regular expression.
+skeen prints a `PID:` line only while sing-box runs, and the words `running` and `stopped` survive every translation. The app looks for those, so a new skeen release that rewords its output doesn’t break it. If your setup prints something else, pick **By My Own Rule** in the connection settings and give a substring or a regular expression.
 
 On top of SSH, the app asks sing-box itself through `experimental.clash_api`, at `http://<router>:9090` by default. When the API answers, sing-box is alive, even if SSH is down or skeen printed something odd. Turn it off or point it elsewhere in the same tab.
 
 ## Move to another Mac
 
-Open **Общие → Перенос на другой Mac → Экспортировать…** and choose a passphrase of at least 8 characters. On the other Mac, install the app and press **Импортировать…** with the same passphrase.
+Open **General → Move to Another Mac → Export…** and choose a passphrase of at least 8 characters. On the other Mac, install the app and press **Import…** with the same passphrase.
 
 The file holds the settings, the SSH password, the Clash API secret, and the pinned host key. It’s sealed with AES-256-GCM under a key derived from the passphrase by PBKDF2-HMAC-SHA256 with 600 000 iterations and a random salt, and the header is authenticated too. Without the passphrase the file is useless, so send the two by different channels.
 
@@ -68,7 +69,7 @@ The file holds the settings, the SSH password, the Clash API secret, and the pin
 
 - The SSH password and the Clash API secret live in the login Keychain under `skeen-status-macos`. They never reach `config.json`.
 - The config sits in `~/Library/Application Support/skeen-status-macos/config.json` with mode `0600`, next to the app’s own log and the chart history.
-- The app pins the router’s SSH host key on first connect and refuses to log in if it changes. **Подключение → Забыть ключ** resets it after you replace the router.
+- The app pins the router’s SSH host key on first connect and refuses to log in if it changes. **Connection → Forget Key** resets it after you replace the router.
 - Scripts run on this Mac through `/bin/sh -c`, never on the router.
 - The app talks only to your router. It sends nothing anywhere else.
 
@@ -81,8 +82,11 @@ SkeenStatus/
   App/        the root reducer, the window, the menu bar, the demo mode
   Features/   Monitor, ServiceControl, Logs, Settings: a reducer and its views each
   Entities/   Skeen (status, version, controls, log) and SingBox (the Clash API)
-  Shared/     config, SSH, Keychain, notifications, helpers, glass UI, the orb shader
+  Shared/     config, SSH, Keychain, notifications, language, helpers, glass UI, the orb shader
+  Localizable.xcstrings   English source strings with their Russian translations
 ```
+
+The code is written in English, and `Localizable.xcstrings` carries the Russian. A new user-facing string goes through `String(localized:)` or a SwiftUI literal, and gets its Russian line in the catalog.
 
 A layer imports only from the layers below it, and a feature never imports another feature. Their delegate actions meet in `AppFeature`.
 
@@ -93,7 +97,7 @@ xcodebuild -project SkeenStatus.xcodeproj -scheme SkeenStatus -destination 'plat
 
 Xcode 27 ships the Metal compiler apart; get it once with `xcodebuild -downloadComponent MetalToolchain`.
 
-Launch with `--demo` to run against a made-up router: no network, no Keychain, no files. UI tests and the screenshots above use it. `--tab overview|logs|connection|scripts|general` opens the window on a tab.
+Launch with `--demo` to run against a made-up router: no network, no Keychain, no files. UI tests and the screenshots above use it; add `-AppleLanguages "(ru)"` to see it in Russian. `--tab overview|logs|connection|scripts|general` opens the window on a tab.
 
 ## Related projects
 
