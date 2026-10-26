@@ -10,7 +10,7 @@ final class SkeenStatusUITests: XCTestCase {
     @MainActor
     private func launchedApp(_ extra: [String] = []) -> XCUIApplication {
         let app = XCUIApplication()
-        app.launchArguments = ["--demo"] + extra
+        app.launchArguments = ["--demo", "-AppleLanguages", "(en)"] + extra
         app.launch()
         return app
     }
@@ -29,9 +29,9 @@ final class SkeenStatusUITests: XCTestCase {
         let app = launchedApp()
         try statusItem(in: app).click()
 
-        XCTAssertTrue(app.menuItems["Проверить сейчас"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.menuItems["Настройки…"].exists)
-        XCTAssertTrue(app.menuItems["Выйти"].exists)
+        XCTAssertTrue(app.menuItems["Check Now"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.menuItems["Settings…"].exists)
+        XCTAssertTrue(app.menuItems["Quit"].exists)
     }
 
     @MainActor
@@ -39,7 +39,7 @@ final class SkeenStatusUITests: XCTestCase {
         let app = launchedApp()
         try statusItem(in: app).click()
 
-        let settings = app.menuItems["Настройки…"]
+        let settings = app.menuItems["Settings…"]
         XCTAssertTrue(settings.waitForExistence(timeout: 5))
         settings.click()
 
@@ -54,7 +54,7 @@ final class SkeenStatusUITests: XCTestCase {
         let window = app.windows.firstMatch
         XCTAssertTrue(window.waitForExistence(timeout: 5))
 
-        window.outlines.staticTexts["Подключение"].click()
+        window.outlines.staticTexts["Connection"].click()
         let gateway = window.textFields["settings.gateway"]
         XCTAssertTrue(gateway.waitForExistence(timeout: 5))
         gateway.click()

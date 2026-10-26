@@ -53,9 +53,9 @@ struct ServiceControlFeature {
                     TextState("\(control.title) skeen?")
                 } actions: {
                     ButtonState(role: .destructive, action: .run(control)) { TextState(control.title) }
-                    ButtonState(role: .cancel) { TextState("Отмена") }
+                    ButtonState(role: .cancel) { TextState("Cancel") }
                 } message: {
-                    TextState("Трафик через прокси ненадолго прервётся.")
+                    TextState("Traffic through the proxy will stop for a moment.")
                 }
                 return .none
 

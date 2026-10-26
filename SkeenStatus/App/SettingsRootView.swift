@@ -39,7 +39,7 @@ struct SettingsRootView: View {
                         }
                         .disabled(store.monitor.isChecking)
                         .glassButton(prominent: false, reduceTransparency: reduceTransparency)
-                        .help("Проверить сейчас")
+                        .help("Check Now")
                         .accessibilityIdentifier("overview.checkNow")
                     }
                     ServiceControlView(store: store.scope(state: \.service, action: \.service))

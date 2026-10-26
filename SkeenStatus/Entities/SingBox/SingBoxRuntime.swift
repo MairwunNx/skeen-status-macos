@@ -40,12 +40,12 @@ extension SharedKey where Self == InMemoryKey<SingBoxSnapshot>.Default {
     }
 }
 
-/// Russian name of a Clash mode; unknown modes keep their own name.
+/// Readable name of a Clash mode; unknown modes keep their own name.
 func modeTitle(_ mode: String) -> String {
     switch mode.lowercased() {
-    case "rule": return "По правилам"
-    case "global": return "Всё через прокси"
-    case "direct": return "Всё напрямую"
+    case "rule": return String(localized: "By Rules")
+    case "global": return String(localized: "All via Proxy")
+    case "direct": return String(localized: "All Direct")
     default: return mode
     }
 }

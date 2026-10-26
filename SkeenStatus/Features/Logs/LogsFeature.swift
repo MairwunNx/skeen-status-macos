@@ -54,7 +54,7 @@ struct LogsFeature {
             case .refresh:
                 guard !state.isPaused else { return .none }
                 guard !state.config.logFilePath.isBlank else {
-                    state.error = "Не указан путь к файлу лога"
+                    state.error = String(localized: "No log file path is set")
                     return .none
                 }
                 let command = state.config.logCommand

@@ -14,6 +14,10 @@ struct SettingsFeature {
         var savedClashSecret = ""
         var test: TestStatus?
         var loginItemEnabled = false
+        var language: AppLanguage = .system
+        /// The language on screen right now, and what the choice would show.
+        var activeLanguage = "en"
+        var systemLanguage = "en"
         var saveError: String?
         /// The passphrase sheet for moving settings to another Mac.
         var transfer: TransferMode?
@@ -26,6 +30,11 @@ struct SettingsFeature {
         var exportData: Data?
         var isPickingImport = false
         @Presents var alert: AlertState<Action.Alert>?
+
+        /// A new language shows only after a relaunch.
+        var needsRelaunch: Bool {
+            language.resolved(systemPreferred: systemLanguage) != activeLanguage
+        }
 
         var hasChanges: Bool {
             var current = config
@@ -56,6 +65,8 @@ struct SettingsFeature {
         case testFinished(Result<String, Error>)
         case forgetHostKeyTapped
         case openAppLogTapped
+        case languageChanged(AppLanguage)
+        case relaunchTapped
         case exportTapped
         case importTapped
         case importPicked(Result<URL, Error>)
@@ -82,6 +93,7 @@ struct SettingsFeature {
     @Dependency(\.appLog) var appLog
     @Dependency(\.date.now) var now
     @Dependency(\.keychain) var keychain
+    @Dependency(\.language) var language
     @Dependency(\.loginItem) var loginItem
     @Dependency(\.openURL) var openURL
     @Dependency(\.routerShell) var routerShell
@@ -100,6 +112,9 @@ struct SettingsFeature {
                 state.password = state.savedPassword
                 state.clashSecret = state.savedClashSecret
                 state.loginItemEnabled = loginItem.isEnabled()
+                state.language = language.choice()
+                state.activeLanguage = language.active()
+                state.systemLanguage = language.systemPreferred()
                 state.saveError = nil
                 return .none
 
@@ -123,7 +138,7 @@ struct SettingsFeature {
                     state.saveError = nil
                 } catch {
                     appLog.write("login item error: \(error)")
-                    state.saveError = "Не удалось изменить автозапуск: \(error.localizedDescription)"
+                    state.saveError = String(localized: "Can’t change launch at login: \(error.localizedDescription)")
                 }
                 state.loginItemEnabled = loginItem.isEnabled()
                 appLog.write("settings saved")
@@ -131,12 +146,12 @@ struct SettingsFeature {
 
             case .resetTapped:
                 state.alert = AlertState {
-                    TextState("Вернуть настройки по умолчанию?")
+                    TextState("Reset settings to defaults?")
                 } actions: {
-                    ButtonState(role: .destructive, action: .confirmReset) { TextState("Сбросить") }
-                    ButtonState(role: .cancel) { TextState("Отмена") }
+                    ButtonState(role: .destructive, action: .confirmReset) { TextState("Reset") }
+                    ButtonState(role: .cancel) { TextState("Cancel") }
                 } message: {
-                    TextState("Изменения попадут в черновик. Чтобы применить их, нажмите «Сохранить».")
+                    TextState("The change goes into the draft. Press “Save” to apply it.")
                 }
                 return .none
 
@@ -156,7 +171,7 @@ struct SettingsFeature {
                 }
 
             case .testFinished(.success):
-                state.test = .succeeded("Роутер \(state.draft.gateway):\(state.draft.port) принял логин и пароль")
+                state.test = .succeeded(String(localized: "\(state.draft.gateway):\(state.draft.port) accepted the login and password"))
                 return .none
 
             case .testFinished(.failure(let error)):
@@ -165,12 +180,12 @@ struct SettingsFeature {
 
             case .forgetHostKeyTapped:
                 state.alert = AlertState {
-                    TextState("Забыть ключ роутера?")
+                    TextState("Forget the router’s key?")
                 } actions: {
-                    ButtonState(role: .destructive, action: .confirmForgetHostKey) { TextState("Забыть") }
-                    ButtonState(role: .cancel) { TextState("Отмена") }
+                    ButtonState(role: .destructive, action: .confirmForgetHostKey) { TextState("Forget") }
+                    ButtonState(role: .cancel) { TextState("Cancel") }
                 } message: {
-                    TextState("При следующем подключении приложение доверится ключу, который покажет роутер. Делайте так, только если сменили роутер или прошивку.")
+                    TextState("On the next connection the app trusts whatever key the router shows. Do this only after replacing the router or its firmware.")
                 }
                 return .none
 
@@ -183,6 +198,15 @@ struct SettingsFeature {
             case .openAppLogTapped:
                 let url = appLog.url()
                 return .run { _ in await openURL(url) }
+
+            case .languageChanged(let choice):
+                state.language = choice
+                language.setChoice(choice)
+                appLog.write("language set to \(choice.rawValue)")
+                return .none
+
+            case .relaunchTapped:
+                return .run { _ in language.relaunch() }
 
             case .exportTapped:
                 state.transfer = .export
@@ -200,7 +224,7 @@ struct SettingsFeature {
             case .importPicked(.success(let url)):
                 state.isPickingImport = false
                 guard let data = try? Data(contentsOf: url) else {
-                    state.transferNotice = "Не удалось прочитать файл"
+                    state.transferNotice = String(localized: "Can’t read the file")
                     return .none
                 }
                 state.transfer = .import(data)
@@ -222,7 +246,7 @@ struct SettingsFeature {
                         return .none
                     }
                     guard passphrase == state.passphraseConfirmation else {
-                        state.transferError = "Коды не совпадают"
+                        state.transferError = String(localized: "The passphrases don’t match")
                         return .none
                     }
                     state.isTransferring = true
@@ -269,7 +293,7 @@ struct SettingsFeature {
                 state.$config.withLock { $0 = bundle.config }
                 keychain.save(bundle.password, bundle.config.login)
                 keychain.save(bundle.clashSecret, Config.clashSecretAccount)
-                state.transferNotice = "Настройки перенесены: роутер \(bundle.config.gateway)"
+                state.transferNotice = String(localized: "Settings moved in: router \(bundle.config.gateway)")
                 appLog.write("settings imported for \(bundle.config.gateway)")
                 return .merge(.send(.onAppear), .send(.delegate(.saved)))
 
@@ -281,7 +305,7 @@ struct SettingsFeature {
             case .exportSaved(let result):
                 state.exportData = nil
                 if case .success(let url) = result {
-                    state.transferNotice = "Сохранено в «\(url.lastPathComponent)». Код передайте отдельно от файла."
+                    state.transferNotice = String(localized: "Saved to “\(url.lastPathComponent)”. Send the passphrase separately from the file.")
                     appLog.write("settings exported")
                 }
                 return .none

@@ -3,7 +3,7 @@ import SwiftUI
 /// Section container with a Liquid Glass background, falling back to a solid
 /// material when Reduce Transparency is enabled.
 struct SectionCard<Content: View>: View {
-    let title: String
+    let title: LocalizedStringKey
     var systemImage: String?
     @ViewBuilder var content: Content
 

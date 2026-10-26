@@ -80,6 +80,6 @@ struct MetricsTests {
 
     @Test func rateText() {
         #expect(rateString(nil) == "—")
-        #expect(rateString(1_536) == "1.5 КБ/с")
+        #expect(rateString(1_536) == "1.5 KB/s")
     }
 }

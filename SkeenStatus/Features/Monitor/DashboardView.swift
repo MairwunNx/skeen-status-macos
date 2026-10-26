@@ -56,7 +56,7 @@ struct DashboardView<Accessory: View>: View {
                     .foregroundStyle(.secondary)
             }
             Spacer()
-            Picker("Период", selection: Binding(
+            Picker("Range", selection: Binding(
                 get: { store.chartRange },
                 set: { store.send(.setChartRange($0)) }
             )) {
@@ -72,9 +72,9 @@ struct DashboardView<Accessory: View>: View {
     }
 
     private var subtitle: String {
-        var parts = ["Роутер \(store.config.gateway)"]
+        var parts = [String(localized: "Router \(store.config.gateway)")]
         if let lastCheck = store.snapshot.lastCheck {
-            parts.append("проверено в \(timeString(lastCheck))")
+            parts.append(String(localized: "checked at \(timeString(lastCheck))"))
         }
         return parts.joined(separator: " · ")
     }
@@ -88,14 +88,14 @@ struct DashboardView<Accessory: View>: View {
         let route = runtime?.groups.first(where: \.isSelectable) ?? runtime?.groups.first
 
         return [
-            Tile(id: "pid", title: "Процесс", value: process?.pid.map { "PID \($0)" } ?? "—", detail: process?.uptime.map { "работает \($0)" } ?? store.snapshot.state.title),
-            Tile(id: "memory", title: "Память", value: process?.memoryMB.map { "\($0) МБ" } ?? "—", detail: runtime?.memoryBytes.map { "куча Go \(byteString($0))" } ?? "по данным skeen"),
-            Tile(id: "connections", title: "Соединения", value: runtime.map { "\($0.connections)" } ?? "—", detail: "открыто сейчас"),
-            Tile(id: "route", title: "Выход", value: route?.now ?? "—", detail: runtime.map { (route.map { "\($0.name) · " } ?? "") + modeTitle($0.mode).lowercased() } ?? "нет Clash API"),
-            Tile(id: "down", title: "Приём", value: rateString(latest?.downloadRate), detail: runtime.map { "всего \(byteString($0.downloadTotal))" } ?? "—"),
-            Tile(id: "up", title: "Отдача", value: rateString(latest?.uploadRate), detail: runtime.map { "всего \(byteString($0.uploadTotal))" } ?? "—"),
-            Tile(id: "singbox", title: "sing-box", value: runtime.map { $0.version.replacingOccurrences(of: "sing-box ", with: "") } ?? store.snapshot.version?.singBox ?? "—", detail: store.snapshot.version?.skeen.map { "SKeen \($0)" } ?? "версия skeen неизвестна"),
-            Tile(id: "uptime", title: "Доступность", value: availabilityText, detail: "за \(store.chartRange == .all ? "всё время" : store.chartRange.title)"),
+            Tile(id: "pid", title: String(localized: "Process"), value: process?.pid.map { "PID \($0)" } ?? "—", detail: process?.uptime.map { String(localized: "up \($0)") } ?? store.snapshot.state.title),
+            Tile(id: "memory", title: String(localized: "Memory"), value: process?.memoryMB.map { String(localized: "\($0) MB") } ?? "—", detail: runtime?.memoryBytes.map { String(localized: "Go heap \(byteString($0))") } ?? String(localized: "as skeen reports")),
+            Tile(id: "connections", title: String(localized: "Connections"), value: runtime.map { "\($0.connections)" } ?? "—", detail: String(localized: "open now")),
+            Tile(id: "route", title: String(localized: "Outbound"), value: route?.now ?? "—", detail: runtime.map { (route.map { "\($0.name) · " } ?? "") + modeTitle($0.mode).lowercased() } ?? String(localized: "no Clash API")),
+            Tile(id: "down", title: String(localized: "Download"), value: rateString(latest?.downloadRate), detail: runtime.map { String(localized: "\(byteString($0.downloadTotal)) in total") } ?? "—"),
+            Tile(id: "up", title: String(localized: "Upload"), value: rateString(latest?.uploadRate), detail: runtime.map { String(localized: "\(byteString($0.uploadTotal)) in total") } ?? "—"),
+            Tile(id: "singbox", title: "sing-box", value: runtime.map { $0.version.replacingOccurrences(of: "sing-box ", with: "") } ?? store.snapshot.version?.singBox ?? "—", detail: store.snapshot.version?.skeen.map { "SKeen \($0)" } ?? String(localized: "skeen version unknown")),
+            Tile(id: "uptime", title: String(localized: "Availability"), value: availabilityText, detail: store.chartRange == .all ? String(localized: "over all time") : String(localized: "over \(store.chartRange.title)")),
         ]
     }
 
@@ -136,30 +136,30 @@ struct DashboardView<Accessory: View>: View {
 
     private var speedChart: some View {
         let hovered = sample(near: speedHover)
-        return ChartCard(title: "Скорость", detail: "Приём и отдача в секунду", legend: [("Приём", .blue), ("Отдача", .orange)]) {
+        return ChartCard(title: "Speed", detail: "Download and upload per second", legend: [(String(localized: "Download"), .blue), (String(localized: "Upload"), .orange)]) {
             Chart {
                 ForEach(visibleSamples) { sample in
                     if let rate = sample.downloadRate {
-                        AreaMark(x: .value("Время", sample.date), y: .value("Скорость", rate), series: .value("Поток", "Приём"))
+                        AreaMark(x: .value("Time", sample.date), y: .value("Speed", rate), series: .value("Flow", "Download"))
                             .foregroundStyle(LinearGradient(colors: [.blue.opacity(0.35), .blue.opacity(0.02)], startPoint: .top, endPoint: .bottom))
                             .interpolationMethod(.monotone)
-                        LineMark(x: .value("Время", sample.date), y: .value("Скорость", rate), series: .value("Поток", "Приём"))
+                        LineMark(x: .value("Time", sample.date), y: .value("Speed", rate), series: .value("Flow", "Download"))
                             .foregroundStyle(.blue)
                             .interpolationMethod(.monotone)
                     }
                     if let rate = sample.uploadRate {
-                        LineMark(x: .value("Время", sample.date), y: .value("Скорость", rate), series: .value("Поток", "Отдача"))
+                        LineMark(x: .value("Time", sample.date), y: .value("Speed", rate), series: .value("Flow", "Upload"))
                             .foregroundStyle(.orange)
                             .interpolationMethod(.monotone)
                     }
                 }
                 if let hovered {
                     hoverRule(hovered, lines: [
-                        ("Приём", rateString(hovered.downloadRate), .blue),
-                        ("Отдача", rateString(hovered.uploadRate), .orange),
+                        (String(localized: "Download"), rateString(hovered.downloadRate), .blue),
+                        (String(localized: "Upload"), rateString(hovered.uploadRate), .orange),
                     ])
                     if let rate = hovered.downloadRate {
-                        PointMark(x: .value("Время", hovered.date), y: .value("Скорость", rate)).foregroundStyle(.blue)
+                        PointMark(x: .value("Time", hovered.date), y: .value("Speed", rate)).foregroundStyle(.blue)
                     }
                 }
             }
@@ -179,22 +179,22 @@ struct DashboardView<Accessory: View>: View {
 
     private var connectionsChart: some View {
         let hovered = sample(near: connectionsHover)
-        return ChartCard(title: "Соединения", detail: "Открытые соединения через sing-box", legend: []) {
+        return ChartCard(title: "Connections", detail: "Open connections through sing-box", legend: []) {
             Chart {
                 ForEach(visibleSamples) { sample in
                     if let connections = sample.connections {
-                        AreaMark(x: .value("Время", sample.date), y: .value("Соединения", connections))
+                        AreaMark(x: .value("Time", sample.date), y: .value("Connections", connections))
                             .foregroundStyle(LinearGradient(colors: [.green.opacity(0.3), .green.opacity(0.02)], startPoint: .top, endPoint: .bottom))
                             .interpolationMethod(.monotone)
-                        LineMark(x: .value("Время", sample.date), y: .value("Соединения", connections))
+                        LineMark(x: .value("Time", sample.date), y: .value("Connections", connections))
                             .foregroundStyle(.green)
                             .interpolationMethod(.monotone)
                     }
                 }
                 if let hovered {
-                    hoverRule(hovered, lines: [("Соединения", hovered.connections.map(String.init) ?? "—", .green)])
+                    hoverRule(hovered, lines: [(String(localized: "Connections"), hovered.connections.map(String.init) ?? "—", .green)])
                     if let connections = hovered.connections {
-                        PointMark(x: .value("Время", hovered.date), y: .value("Соединения", connections)).foregroundStyle(.green)
+                        PointMark(x: .value("Time", hovered.date), y: .value("Connections", connections)).foregroundStyle(.green)
                     }
                 }
             }
@@ -205,19 +205,19 @@ struct DashboardView<Accessory: View>: View {
 
     private var memoryChart: some View {
         let hovered = sample(near: memoryHover)
-        return ChartCard(title: "Память sing-box", detail: "Резидентная память процесса по данным skeen", legend: []) {
+        return ChartCard(title: "sing-box Memory", detail: "Resident memory of the process, as skeen reports", legend: []) {
             Chart {
                 ForEach(visibleSamples) { sample in
                     if let memory = sample.memoryMB {
-                        LineMark(x: .value("Время", sample.date), y: .value("МБ", memory))
+                        LineMark(x: .value("Time", sample.date), y: .value("MB", memory))
                             .foregroundStyle(.purple)
                             .interpolationMethod(.stepEnd)
                     }
                 }
                 if let hovered {
-                    hoverRule(hovered, lines: [("Память", hovered.memoryMB.map { "\($0) МБ" } ?? "—", .purple)])
+                    hoverRule(hovered, lines: [(String(localized: "Memory"), hovered.memoryMB.map { String(localized: "\($0) MB") } ?? "—", .purple)])
                     if let memory = hovered.memoryMB {
-                        PointMark(x: .value("Время", hovered.date), y: .value("МБ", memory)).foregroundStyle(.purple)
+                        PointMark(x: .value("Time", hovered.date), y: .value("MB", memory)).foregroundStyle(.purple)
                     }
                 }
             }
@@ -228,7 +228,7 @@ struct DashboardView<Accessory: View>: View {
                 AxisMarks { value in
                     AxisGridLine()
                     AxisValueLabel {
-                        if let memory = value.as(Int.self) { Text("\(memory) МБ") }
+                        if let memory = value.as(Int.self) { Text("\(memory) MB") }
                     }
                 }
             }
@@ -238,23 +238,23 @@ struct DashboardView<Accessory: View>: View {
     private var availabilityChart: some View {
         let hovered = sample(near: availabilityHover)
         return ChartCard(
-            title: "Доступность",
-            detail: "Когда sing-box работал",
-            legend: [("работает", .green), ("остановлен", .red), ("нет связи", .yellow)]
+            title: "Availability",
+            detail: "When sing-box was running",
+            legend: [(String(localized: "running"), .green), (String(localized: "stopped"), .red), (String(localized: "no connection"), .yellow)]
         ) {
             Chart {
                 ForEach(spans) { span in
                     RectangleMark(
-                        xStart: .value("С", span.start),
-                        xEnd: .value("По", span.end),
-                        yStart: .value("Низ", 0),
-                        yEnd: .value("Верх", 1)
+                        xStart: .value("From", span.start),
+                        xEnd: .value("To", span.end),
+                        yStart: .value("Bottom", 0),
+                        yEnd: .value("Top", 1)
                     )
                     .foregroundStyle(phaseColor(span.phase))
                     .opacity(hovered == nil || hovered?.date == span.start ? 1 : 0.55)
                 }
                 if let hovered {
-                    hoverRule(hovered, lines: [("Состояние", phaseTitle(hovered.phase), phaseColor(hovered.phase))])
+                    hoverRule(hovered, lines: [(String(localized: "State"), phaseTitle(hovered.phase), phaseColor(hovered.phase))])
                 }
             }
             .chartXScale(domain: xDomain)
@@ -277,7 +277,7 @@ struct DashboardView<Accessory: View>: View {
 
     /// A vertical line at the hovered sample with a glass tooltip above it.
     private func hoverRule(_ sample: MetricSample, lines: [(String, String, Color)]) -> some ChartContent {
-        RuleMark(x: .value("Время", sample.date))
+        RuleMark(x: .value("Time", sample.date))
             .foregroundStyle(.secondary.opacity(0.5))
             .lineStyle(StrokeStyle(lineWidth: 1, dash: [3, 3]))
             .annotation(position: .top, spacing: 4, overflowResolution: .init(x: .fit(to: .chart), y: .disabled)) {
@@ -296,10 +296,10 @@ struct DashboardView<Accessory: View>: View {
 
     private func phaseTitle(_ phase: StatePhase) -> String {
         switch phase {
-        case .running: return "работает"
-        case .stopped: return "остановлен"
-        case .unreachable: return "нет связи"
-        case .unknown: return "неизвестно"
+        case .running: return String(localized: "running")
+        case .stopped: return String(localized: "stopped")
+        case .unreachable: return String(localized: "no connection")
+        case .unknown: return String(localized: "unknown")
         }
     }
 }
@@ -366,8 +366,8 @@ private struct StatTile: View {
 }
 
 private struct ChartCard<Content: View>: View {
-    let title: String
-    let detail: String
+    let title: LocalizedStringKey
+    let detail: LocalizedStringKey
     let legend: [(String, Color)]
     @ViewBuilder var content: Content
 

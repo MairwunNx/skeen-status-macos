@@ -1,0 +1,2188 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "": {
+      "shouldTranslate": false
+    },
+    "%@ in total": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "всего %@"
+          }
+        }
+      }
+    },
+    "%@ skeen?": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ skeen?"
+          }
+        }
+      }
+    },
+    "%@/s": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@/с"
+          }
+        }
+      }
+    },
+    "%@:%lld accepted the login and password": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Роутер %@:%lld принял логин и пароль"
+          }
+        }
+      }
+    },
+    "%lld MB": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld МБ"
+          }
+        }
+      }
+    },
+    "%lld d": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld д"
+          }
+        }
+      }
+    },
+    "%lld d %lld h": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld д %lld ч"
+          }
+        }
+      }
+    },
+    "%lld h": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld ч"
+          }
+        }
+      }
+    },
+    "%lld h %lld min": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld ч %lld мин"
+          }
+        }
+      }
+    },
+    "%lld min": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld мин"
+          }
+        }
+      }
+    },
+    "%lld s": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld с"
+          }
+        }
+      }
+    },
+    "%lld.": {
+      "shouldTranslate": false
+    },
+    "1 h": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 ч"
+          }
+        }
+      }
+    },
+    "15": {
+      "shouldTranslate": false
+    },
+    "15 min": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "15 мин"
+          }
+        }
+      }
+    },
+    "192.168.1.1": {
+      "shouldTranslate": false
+    },
+    "2022": {
+      "shouldTranslate": false
+    },
+    "24 h": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "24 ч"
+          }
+        }
+      }
+    },
+    "5 min": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "5 мин"
+          }
+        }
+      }
+    },
+    "50": {
+      "shouldTranslate": false
+    },
+    "A file with the settings, the SSH password, the Clash API secret, and the router’s key, sealed with your passphrase: AES-256-GCM under a PBKDF2-SHA256 key. Without the passphrase the file is useless, so send the passphrase separately.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Файл с настройками, паролем SSH, секретом Clash API и ключом роутера, зашифрованный вашим кодом: AES-256-GCM, ключ из кода через PBKDF2-SHA256. Без кода файл бесполезен, поэтому передавайте код отдельно."
+          }
+        }
+      }
+    },
+    "A full restart: skeen sets up the firewall and sing-box again.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Полный перезапуск: skeen заново настраивает файрвол и sing-box."
+          }
+        }
+      }
+    },
+    "Address": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Адрес"
+          }
+        }
+      }
+    },
+    "All Direct": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Всё напрямую"
+          }
+        }
+      }
+    },
+    "All Time": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Всё время"
+          }
+        }
+      }
+    },
+    "All via Proxy": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Всё через прокси"
+          }
+        }
+      }
+    },
+    "As in macOS": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Как в macOS"
+          }
+        }
+      }
+    },
+    "Ask sing-box Directly": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Спрашивать sing-box напрямую"
+          }
+        }
+      }
+    },
+    "Automatically": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Автоматически"
+          }
+        }
+      }
+    },
+    "Automatically: running when skeen shows a PID or the word “running”, in any language.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Автоматически: работает, если skeen показал PID или слово «running», на любом языке."
+          }
+        }
+      }
+    },
+    "Availability": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Доступность"
+          }
+        }
+      }
+    },
+    "B": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Б"
+          }
+        }
+      }
+    },
+    "Bottom": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Низ"
+          }
+        }
+      }
+    },
+    "By My Own Rule": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "По своему правилу"
+          }
+        }
+      }
+    },
+    "By Rules": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "По правилам"
+          }
+        }
+      }
+    },
+    "Cancel": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Отмена"
+          }
+        }
+      }
+    },
+    "Can’t change launch at login: %@": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не удалось изменить автозапуск: %@"
+          }
+        }
+      }
+    },
+    "Can’t fetch the log": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не удалось получить лог"
+          }
+        }
+      }
+    },
+    "Can’t reach %@ over SSH.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не удаётся связаться с %@ по SSH."
+          }
+        }
+      }
+    },
+    "Can’t read the file": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не удалось прочитать файл"
+          }
+        }
+      }
+    },
+    "Can’t read the output of “%@”": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не удалось разобрать вывод «%@»"
+          }
+        }
+      }
+    },
+    "Check Config": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Проверить конфиг"
+          }
+        }
+      }
+    },
+    "Check Now": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Проверить сейчас"
+          }
+        }
+      }
+    },
+    "Checked at %@": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Проверено в %@"
+          }
+        }
+      }
+    },
+    "Checking…": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Проверяю…"
+          }
+        }
+      }
+    },
+    "Checks the sing-box config without restarting anything.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Проверяет конфигурацию sing-box, ничего не перезапуская."
+          }
+        }
+      }
+    },
+    "Choose a passphrase of at least %lld characters. You’ll need it on the other Mac, and nobody can recover it.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Придумайте код не короче %lld символов. Он понадобится на другом Mac, восстановить его нельзя."
+          }
+        }
+      }
+    },
+    "Command": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Команда"
+          }
+        }
+      }
+    },
+    "Commands After Login": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Команды после входа"
+          }
+        }
+      }
+    },
+    "Connection": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Подключение"
+          }
+        }
+      }
+    },
+    "Connections": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Соединения"
+          }
+        }
+      }
+    },
+    "Decrypt": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Расшифровать"
+          }
+        }
+      }
+    },
+    "Diagnostics": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Диагностика"
+          }
+        }
+      }
+    },
+    "Download": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Приём"
+          }
+        }
+      }
+    },
+    "Download and upload per second": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Приём и отдача в секунду"
+          }
+        }
+      }
+    },
+    "Downtime: %@.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Простой: %@."
+          }
+        }
+      }
+    },
+    "Empty if not set": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Пусто, если не задан"
+          }
+        }
+      }
+    },
+    "Encrypt": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Зашифровать"
+          }
+        }
+      }
+    },
+    "Enter the passphrase the file was sealed with. The settings from the file replace the current ones.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Введите код, которым файл зашифровали. Текущие настройки заменятся настройками из файла."
+          }
+        }
+      }
+    },
+    "Export…": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Экспортировать…"
+          }
+        }
+      }
+    },
+    "Flow": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Поток"
+          }
+        }
+      }
+    },
+    "Forget": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Забыть"
+          }
+        }
+      }
+    },
+    "Forget Key": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Забыть ключ"
+          }
+        }
+      }
+    },
+    "Forget the router’s key?": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Забыть ключ роутера?"
+          }
+        }
+      }
+    },
+    "From": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "С"
+          }
+        }
+      }
+    },
+    "GB": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ГБ"
+          }
+        }
+      }
+    },
+    "General": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Общие"
+          }
+        }
+      }
+    },
+    "Getting the version…": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Узнаю версию…"
+          }
+        }
+      }
+    },
+    "Go heap %@": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "куча Go %@"
+          }
+        }
+      }
+    },
+    "How to Tell It Runs": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Как понять, что работает"
+          }
+        }
+      }
+    },
+    "Import…": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Импортировать…"
+          }
+        }
+      }
+    },
+    "Interval": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Интервал"
+          }
+        }
+      }
+    },
+    "It ran for %@ before that.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "До этого проработал %@."
+          }
+        }
+      }
+    },
+    "KB": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "КБ"
+          }
+        }
+      }
+    },
+    "Kept in the Keychain": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Хранится в Связке ключей"
+          }
+        }
+      }
+    },
+    "Language": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Язык"
+          }
+        }
+      }
+    },
+    "Lines": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Строк"
+          }
+        }
+      }
+    },
+    "Loading the log…": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Загружаю лог…"
+          }
+        }
+      }
+    },
+    "Login": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Логин"
+          }
+        }
+      }
+    },
+    "MB": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "МБ"
+          }
+        }
+      }
+    },
+    "Memory": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Память"
+          }
+        }
+      }
+    },
+    "Mode: %@": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Режим: %@"
+          }
+        }
+      }
+    },
+    "Move to Another Mac": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Перенос на другой Mac"
+          }
+        }
+      }
+    },
+    "No POSIX shell after the post-connect commands. Check “exec sh”": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "После команд подключения нет POSIX-оболочки. Проверьте «exec sh»"
+          }
+        }
+      }
+    },
+    "No SSH password is set": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не задан пароль SSH"
+          }
+        }
+      }
+    },
+    "No SSH session": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Нет SSH-сессии"
+          }
+        }
+      }
+    },
+    "No log file path is set": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не указан путь к файлу лога"
+          }
+        }
+      }
+    },
+    "Nothing found": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ничего не найдено"
+          }
+        }
+      }
+    },
+    "Notifications": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Уведомления"
+          }
+        }
+      }
+    },
+    "Off right now": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сейчас выключено"
+          }
+        }
+      }
+    },
+    "On right now": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сейчас включено"
+          }
+        }
+      }
+    },
+    "On the next connection the app trusts whatever key the router shows. Do this only after replacing the router or its firmware.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "При следующем подключении приложение доверится ключу, который покажет роутер. Делайте так, только если сменили роутер или прошивку."
+          }
+        }
+      }
+    },
+    "Once more": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ещё раз"
+          }
+        }
+      }
+    },
+    "One bad check is no reason to worry: the app checks again 3 seconds later and tells you only if it holds.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Одна плохая проверка ещё не повод: приложение перепроверяет через 3 секунды и сообщает, только если всё подтвердилось."
+          }
+        }
+      }
+    },
+    "Open": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Открыть"
+          }
+        }
+      }
+    },
+    "Open Log": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Открыть журнал"
+          }
+        }
+      }
+    },
+    "Open at login": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Открывать при входе в систему"
+          }
+        }
+      }
+    },
+    "Open connections through sing-box": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Открытые соединения через sing-box"
+          }
+        }
+      }
+    },
+    "Outbound": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Выход"
+          }
+        }
+      }
+    },
+    "Overview": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Обзор"
+          }
+        }
+      }
+    },
+    "Passphrase": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Код"
+          }
+        }
+      }
+    },
+    "Passphrase for the Settings File": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Код для файла настроек"
+          }
+        }
+      }
+    },
+    "Passphrase of the Settings File": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Код от файла настроек"
+          }
+        }
+      }
+    },
+    "Password": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Пароль"
+          }
+        }
+      }
+    },
+    "Pause": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Пауза"
+          }
+        }
+      }
+    },
+    "Process": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Процесс"
+          }
+        }
+      }
+    },
+    "Quit": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Выйти"
+          }
+        }
+      }
+    },
+    "Range": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Период"
+          }
+        }
+      }
+    },
+    "Refresh": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Обновить"
+          }
+        }
+      }
+    },
+    "Refresh the version": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Обновить версию"
+          }
+        }
+      }
+    },
+    "Regex": {
+      "shouldTranslate": false
+    },
+    "Relaunch Now": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Перезапустить"
+          }
+        }
+      }
+    },
+    "Reload": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Перезагрузить"
+          }
+        }
+      }
+    },
+    "Reset": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сбросить"
+          }
+        }
+      }
+    },
+    "Reset every setting to its default.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Вернуть все настройки по умолчанию."
+          }
+        }
+      }
+    },
+    "Reset settings to defaults?": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Вернуть настройки по умолчанию?"
+          }
+        }
+      }
+    },
+    "Reset…": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сбросить…"
+          }
+        }
+      }
+    },
+    "Resident memory of the process, as skeen reports": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Резидентная память процесса по данным skeen"
+          }
+        }
+      }
+    },
+    "Restart": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Перезапустить"
+          }
+        }
+      }
+    },
+    "Restarts only sing-box and keeps the firewall rules.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Перезапускает только sing-box, правила файрвола остаются."
+          }
+        }
+      }
+    },
+    "Resume": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Продолжить"
+          }
+        }
+      }
+    },
+    "Revert": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Отменить"
+          }
+        }
+      }
+    },
+    "Router": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Роутер"
+          }
+        }
+      }
+    },
+    "Router %@": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Роутер %@"
+          }
+        }
+      }
+    },
+    "Router unreachable": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Роутер недоступен"
+          }
+        }
+      }
+    },
+    "Router: %@": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Роутер: %@"
+          }
+        }
+      }
+    },
+    "Run in order in the same SSH session, before the status check. Keenetic needs “exec sh” to get from its CLI to a shell.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Выполняются по порядку в той же SSH-сессии, до проверки статуса. На Keenetic нужна «exec sh», чтобы попасть из CLI в оболочку."
+          }
+        }
+      }
+    },
+    "Run on this Mac through /bin/sh -c, in order.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Выполняются на этом Mac через /bin/sh -c, по порядку."
+          }
+        }
+      }
+    },
+    "Run on this Mac through /bin/sh -c, in order. One failing command doesn’t stop the rest.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Выполняются на этом Mac через /bin/sh -c, по порядку. Ошибка одной команды не останавливает остальные."
+          }
+        }
+      }
+    },
+    "SSH Port": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Порт SSH"
+          }
+        }
+      }
+    },
+    "Save": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сохранить"
+          }
+        }
+      }
+    },
+    "Saved to “%@”. Send the passphrase separately from the file.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сохранено в «%@». Код передайте отдельно от файла."
+          }
+        }
+      }
+    },
+    "Scripts": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сценарии"
+          }
+        }
+      }
+    },
+    "Search": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Поиск"
+          }
+        }
+      }
+    },
+    "Secret": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Секрет"
+          }
+        }
+      }
+    },
+    "Settings moved in: router %@": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Настройки перенесены: роутер %@"
+          }
+        }
+      }
+    },
+    "Settings…": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Настройки…"
+          }
+        }
+      }
+    },
+    "Skeen Status %@": {
+      "shouldTranslate": false
+    },
+    "Speed": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Скорость"
+          }
+        }
+      }
+    },
+    "Start": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Запустить"
+          }
+        }
+      }
+    },
+    "Start skeen": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Запустить skeen"
+          }
+        }
+      }
+    },
+    "Starts sing-box. Changes nothing if it already runs.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Запускает sing-box. Если он уже работает, ничего не меняет."
+          }
+        }
+      }
+    },
+    "Startup": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Запуск"
+          }
+        }
+      }
+    },
+    "State": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Состояние"
+          }
+        }
+      }
+    },
+    "Status Check": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Проверка статуса"
+          }
+        }
+      }
+    },
+    "Status: running": {
+      "shouldTranslate": false
+    },
+    "Stop": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Остановить"
+          }
+        }
+      }
+    },
+    "Stops sing-box. Traffic will bypass the proxy.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Останавливает sing-box. Трафик пойдёт мимо прокси."
+          }
+        }
+      }
+    },
+    "Substring": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Подстрока"
+          }
+        }
+      }
+    },
+    "TB": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ТБ"
+          }
+        }
+      }
+    },
+    "Tell me when skeen stops and runs again": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сообщать, когда skeen останавливается и снова работает"
+          }
+        }
+      }
+    },
+    "Tell me when the router is unreachable": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сообщать, когда роутер недоступен"
+          }
+        }
+      }
+    },
+    "Test Connection": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Проверить связь"
+          }
+        }
+      }
+    },
+    "The Clash API answered with code %lld": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clash API ответил кодом %lld"
+          }
+        }
+      }
+    },
+    "The Clash API is unreachable: %@": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clash API недоступен: %@"
+          }
+        }
+      }
+    },
+    "The Clash API rejected the secret": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clash API не принял секрет"
+          }
+        }
+      }
+    },
+    "The SSH connection dropped": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SSH-соединение разорвано"
+          }
+        }
+      }
+    },
+    "The SSH session is stopped": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SSH-сессия остановлена"
+          }
+        }
+      }
+    },
+    "The app’s own log: connections, state changes, scripts.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Журнал приложения: подключения, смены состояния, сценарии."
+          }
+        }
+      }
+    },
+    "The change goes into the draft. Press “Save” to apply it.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Изменения попадут в черновик. Чтобы применить их, нажмите «Сохранить»."
+          }
+        }
+      }
+    },
+    "The file uses format version %lld, which this version of the app doesn’t know": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Файл сделан версией формата %lld, эта версия приложения её не знает"
+          }
+        }
+      }
+    },
+    "The new language shows after a relaunch.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Новый язык появится после перезапуска."
+          }
+        }
+      }
+    },
+    "The passphrase needs at least %lld characters": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Код должен быть не короче %lld символов"
+          }
+        }
+      }
+    },
+    "The passphrases don’t match": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Коды не совпадают"
+          }
+        }
+      }
+    },
+    "The router didn’t answer in time": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Роутер не ответил вовремя"
+          }
+        }
+      }
+    },
+    "The router doesn’t answer": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Роутер не отвечает"
+          }
+        }
+      }
+    },
+    "The router is not reachable on the network": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Роутер недоступен в сети"
+          }
+        }
+      }
+    },
+    "The router refused the connection. Check the SSH port": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Роутер отклонил подключение. Проверьте порт SSH"
+          }
+        }
+      }
+    },
+    "The router rejected the login or password": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Роутер не принял логин или пароль"
+          }
+        }
+      }
+    },
+    "The router’s host key changed. If you didn’t replace the router, someone may be intercepting the connection": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ключ хоста роутера изменился. Если вы не меняли роутер, кто-то может подменять соединение"
+          }
+        }
+      }
+    },
+    "The router’s key is pinned": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ключ роутера закреплён"
+          }
+        }
+      }
+    },
+    "The router’s key isn’t pinned yet": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ключ роутера ещё не закреплён"
+          }
+        }
+      }
+    },
+    "Then losing the router also runs the “stops” scripts.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Тогда потеря связи с роутером тоже запустит сценарии «остановился»."
+          }
+        }
+      }
+    },
+    "There are unsaved changes": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Есть несохранённые изменения"
+          }
+        }
+      }
+    },
+    "This is `experimental.clash_api` in the sing-box config. The overview takes traffic, connections, and the current outbound from it, and it shows sing-box is alive even when SSH drops.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Это `experimental.clash_api` из конфига sing-box. Отсюда берутся трафик, соединения и текущий выход на «Обзоре», и по нему видно, что sing-box жив, даже если SSH отвалился."
+          }
+        }
+      }
+    },
+    "This isn’t a Skeen Status settings file": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Это не файл настроек Skeen Status"
+          }
+        }
+      }
+    },
+    "Time": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Время"
+          }
+        }
+      }
+    },
+    "To": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "По"
+          }
+        }
+      }
+    },
+    "Top": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Верх"
+          }
+        }
+      }
+    },
+    "Traffic through the proxy will stop for a moment.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Трафик через прокси ненадолго прервётся."
+          }
+        }
+      }
+    },
+    "Treat an unreachable router as stopped skeen": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Считать недоступный роутер остановленным skeen"
+          }
+        }
+      }
+    },
+    "Unreachable Router": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Недоступный роутер"
+          }
+        }
+      }
+    },
+    "Updated at %@": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Обновлено в %@"
+          }
+        }
+      }
+    },
+    "Upload": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Отдача"
+          }
+        }
+      }
+    },
+    "Version unknown": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Версия неизвестна"
+          }
+        }
+      }
+    },
+    "Warnings and errors only": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Только предупреждения и ошибки"
+          }
+        }
+      }
+    },
+    "When sing-box was running": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Когда sing-box работал"
+          }
+        }
+      }
+    },
+    "When skeen Runs Again": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Когда skeen снова работает"
+          }
+        }
+      }
+    },
+    "When skeen Stops": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Когда skeen остановился"
+          }
+        }
+      }
+    },
+    "Wrong passphrase, or the file is damaged": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Неверный код, или файл повреждён"
+          }
+        }
+      }
+    },
+    "You can also pick it in System Settings → General → Language & Region → Applications.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Его можно выбрать и в Системных настройках → Основные → Язык и регион → Приложения."
+          }
+        }
+      }
+    },
+    "admin": {
+      "shouldTranslate": false
+    },
+    "as skeen reports": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "по данным skeen"
+          }
+        }
+      }
+    },
+    "checked at %@": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "проверено в %@"
+          }
+        }
+      }
+    },
+    "checking…": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "проверяю…"
+          }
+        }
+      }
+    },
+    "command": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "команда"
+          }
+        }
+      }
+    },
+    "http://%@:9090": {
+      "shouldTranslate": false
+    },
+    "no Clash API": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "нет Clash API"
+          }
+        }
+      }
+    },
+    "no connection": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "нет связи"
+          }
+        }
+      }
+    },
+    "open now": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "открыто сейчас"
+          }
+        }
+      }
+    },
+    "over %@": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "за %@"
+          }
+        }
+      }
+    },
+    "over all time": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "за всё время"
+          }
+        }
+      }
+    },
+    "router unreachable": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "роутер недоступен"
+          }
+        }
+      }
+    },
+    "running": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "работает"
+          }
+        }
+      }
+    },
+    "seconds": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "секунд"
+          }
+        }
+      }
+    },
+    "sing-box Clash API": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clash API sing-box"
+          }
+        }
+      }
+    },
+    "sing-box Log": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Лог sing-box"
+          }
+        }
+      }
+    },
+    "sing-box Log…": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Лог sing-box…"
+          }
+        }
+      }
+    },
+    "sing-box Memory": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Память sing-box"
+          }
+        }
+      }
+    },
+    "sing-box on %@ is down, and traffic bypasses the proxy.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "sing-box на %@ не работает, трафик идёт мимо прокси."
+          }
+        }
+      }
+    },
+    "sing-box runs again (PID %lld).": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "sing-box снова работает (PID %lld)."
+          }
+        }
+      }
+    },
+    "sing-box runs again.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "sing-box снова работает."
+          }
+        }
+      }
+    },
+    "skeen": {
+      "shouldTranslate": false
+    },
+    "skeen %@": {
+      "shouldTranslate": false
+    },
+    "skeen Command": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Команда skeen"
+          }
+        }
+      }
+    },
+    "skeen Control": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Управление skeen"
+          }
+        }
+      }
+    },
+    "skeen isn’t running": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "skeen не запущен"
+          }
+        }
+      }
+    },
+    "skeen runs again": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "skeen снова работает"
+          }
+        }
+      }
+    },
+    "skeen status": {
+      "shouldTranslate": false
+    },
+    "skeen stopped": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "skeen остановлен"
+          }
+        }
+      }
+    },
+    "skeen version unknown": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "версия skeen неизвестна"
+          }
+        }
+      }
+    },
+    "stopped": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "остановлен"
+          }
+        }
+      }
+    },
+    "unknown": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "неизвестно"
+          }
+        }
+      }
+    },
+    "up %@": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "работает %@"
+          }
+        }
+      }
+    },
+    "“%@”: done": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "«%@»: готово"
+          }
+        }
+      }
+    },
+    "“%@”: failed": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "«%@»: ошибка"
+          }
+        }
+      }
+    },
+    "“Running” Marker": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Признак «работает»"
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

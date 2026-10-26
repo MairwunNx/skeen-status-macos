@@ -2,7 +2,7 @@ import SwiftUI
 
 /// Ordered, editable list of command strings with add/remove controls.
 struct StringListEditor: View {
-    let hint: String?
+    let hint: LocalizedStringKey?
     @Binding var items: [String]
     @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
 
@@ -19,7 +19,7 @@ struct StringListEditor: View {
                     Text("\(index + 1).")
                         .foregroundStyle(.secondary)
                         .frame(width: 22, alignment: .trailing)
-                    TextField("команда", text: binding(for: index))
+                    TextField("command", text: binding(for: index))
                         .textFieldStyle(.roundedBorder)
                     Button {
                         items.remove(at: index)

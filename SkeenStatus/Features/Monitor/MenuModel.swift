@@ -28,8 +28,8 @@ func menuModel(
     if let process = state.process {
         let parts = [
             process.pid.map { "PID \($0)" },
-            process.memoryMB.map { "\($0) МБ" },
-            process.uptime.map { "работает \($0)" },
+            process.memoryMB.map { String(localized: "\($0) MB") },
+            process.uptime.map { String(localized: "up \($0)") },
         ].compactMap { $0 }
         processLine = parts.isEmpty ? nil : parts.joined(separator: " · ")
     }
@@ -47,17 +47,17 @@ func menuModel(
         color: statusColor(for: state),
         processLine: processLine,
         runtimeLine: runtimeLine,
-        lastCheckLine: "Проверено в \(lastCheck)",
+        lastCheckLine: String(localized: "Checked at \(lastCheck)"),
         errorLine: snapshot.lastError,
-        routerLine: "Роутер: \(gateway)",
+        routerLine: String(localized: "Router: \(gateway)"),
         routeLine: runtime.map(routeSummary),
         canStart: state.phase == .stopped
     )
 }
 
-/// `proxy → VLESS-NL · по правилам`: the first selector and the mode.
+/// `proxy → VLESS-NL · by rules`: the first selector and the mode.
 func routeSummary(_ runtime: SingBoxRuntime) -> String {
     let mode = modeTitle(runtime.mode).lowercased()
-    guard let group = runtime.groups.first(where: \.isSelectable) ?? runtime.groups.first else { return "Режим: \(mode)" }
+    guard let group = runtime.groups.first(where: \.isSelectable) ?? runtime.groups.first else { return String(localized: "Mode: \(mode)") }
     return "\(group.name) → \(group.now) · \(mode)"
 }

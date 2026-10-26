@@ -15,14 +15,14 @@ enum SSHSessionError: Error, Equatable, Sendable, LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .noPassword: return "Не задан пароль SSH"
-        case .notConnected: return "Нет SSH-сессии"
+        case .noPassword: return String(localized: "No SSH password is set")
+        case .notConnected: return String(localized: "No SSH session")
         case .connectFailed(let reason): return reason
-        case .hostKeyChanged: return "Ключ хоста роутера изменился. Если вы не меняли роутер, кто-то может подменять соединение"
-        case .noShell: return "После команд подключения нет POSIX-оболочки. Проверьте «exec sh»"
-        case .timeout: return "Роутер не ответил вовремя"
-        case .stopped: return "SSH-сессия остановлена"
-        case .disconnected: return "SSH-соединение разорвано"
+        case .hostKeyChanged: return String(localized: "The router’s host key changed. If you didn’t replace the router, someone may be intercepting the connection")
+        case .noShell: return String(localized: "No POSIX shell after the post-connect commands. Check “exec sh”")
+        case .timeout: return String(localized: "The router didn’t answer in time")
+        case .stopped: return String(localized: "The SSH session is stopped")
+        case .disconnected: return String(localized: "The SSH connection dropped")
         }
     }
 }
@@ -32,16 +32,16 @@ func describeConnectError(_ error: Error) -> String {
     if let error = error as? SSHSessionError { return error.localizedDescription }
     let text = String(describing: error)
     if text.contains("allAuthenticationOptionsFailed") || text.contains("authentication") {
-        return "Роутер не принял логин или пароль"
+        return String(localized: "The router rejected the login or password")
     }
     if text.contains("connectTimeout") || text.contains("timeout") {
-        return "Роутер не отвечает"
+        return String(localized: "The router doesn’t answer")
     }
     if text.contains("connectionRefused") || text.contains("Connection refused") {
-        return "Роутер отклонил подключение. Проверьте порт SSH"
+        return String(localized: "The router refused the connection. Check the SSH port")
     }
     if text.contains("hostUnreachable") || text.contains("No route") || text.contains("networkUnreachable") {
-        return "Роутер недоступен в сети"
+        return String(localized: "The router is not reachable on the network")
     }
     return text
 }

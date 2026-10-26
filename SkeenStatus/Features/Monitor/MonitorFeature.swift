@@ -220,7 +220,7 @@ struct MonitorFeature {
 
         let new = confirmation.state
         let previousSince = state.snapshot.phaseSince
-        let error = result.reading.sshError ?? (new.phase == .unknown ? "Не удалось разобрать вывод «\(state.config.statusCommand)»" : nil)
+        let error = result.reading.sshError ?? (new.phase == .unknown ? String(localized: "Can’t read the output of “\(state.config.statusCommand)”") : nil)
 
         state.$snapshot.withLock { snapshot in
             snapshot.lastCheck = now

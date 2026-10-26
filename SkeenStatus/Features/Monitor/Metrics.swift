@@ -46,11 +46,11 @@ enum ChartRange: String, CaseIterable, Identifiable, Sendable {
 
     var title: String {
         switch self {
-        case .fiveMinutes: return "5 мин"
-        case .fifteenMinutes: return "15 мин"
-        case .hour: return "1 ч"
-        case .day: return "24 ч"
-        case .all: return "Всё время"
+        case .fiveMinutes: return String(localized: "5 min")
+        case .fifteenMinutes: return String(localized: "15 min")
+        case .hour: return String(localized: "1 h")
+        case .day: return String(localized: "24 h")
+        case .all: return String(localized: "All Time")
         }
     }
 }
@@ -160,8 +160,9 @@ private func weightedAverage(_ samples: [MetricSample], _ value: (MetricSample) 
     return weight > 0 ? sum / Double(weight) : nil
 }
 
-/// `1.2 МБ/с`, or `—` when the speed is unknown.
+/// `1.2 MB/s`, or `—` when the speed is unknown.
 func rateString(_ bytesPerSecond: Double?) -> String {
     guard let bytesPerSecond else { return "—" }
-    return byteString(Int64(bytesPerSecond.rounded())) + "/с"
+    let size = byteString(Int64(bytesPerSecond.rounded()))
+    return String(localized: "\(size)/s")
 }

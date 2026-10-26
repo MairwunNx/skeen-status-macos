@@ -20,10 +20,10 @@ struct SingBoxTests {
         #expect(groups[0].options == ["auto", "direct"])
     }
 
-    @Test func modeNamesInRussian() {
-        #expect(modeTitle("rule") == "По правилам")
-        #expect(modeTitle("Global") == "Всё через прокси")
-        #expect(modeTitle("direct") == "Всё напрямую")
+    @Test func modeNamesAreReadable() {
+        #expect(modeTitle("rule") == "By Rules")
+        #expect(modeTitle("Global") == "All via Proxy")
+        #expect(modeTitle("direct") == "All Direct")
         #expect(modeTitle("custom") == "custom")
     }
 

@@ -17,24 +17,24 @@ struct LogsView: View {
 
     private var toolbar: some View {
         HStack(spacing: 10) {
-            TextField("Поиск", text: $store.search)
+            TextField("Search", text: $store.search)
                 .textFieldStyle(.roundedBorder)
                 .frame(maxWidth: 260)
-            Toggle("Только предупреждения и ошибки", isOn: $store.problemsOnly)
+            Toggle("Warnings and errors only", isOn: $store.problemsOnly)
                 .toggleStyle(.checkbox)
             Spacer()
             Toggle(isOn: $store.isPaused) {
                 Image(systemName: store.isPaused ? "play.fill" : "pause.fill")
             }
             .toggleStyle(.button)
-            .help(store.isPaused ? "Продолжить" : "Пауза")
+            .help(store.isPaused ? String(localized: "Resume") : String(localized: "Pause"))
             Button {
                 store.send(.refresh)
             } label: {
                 Image(systemName: "arrow.clockwise")
             }
             .glassButton(prominent: false, reduceTransparency: reduceTransparency)
-            .help("Обновить")
+            .help("Refresh")
             .accessibilityIdentifier("logs.refresh")
         }
     }
@@ -71,14 +71,14 @@ struct LogsView: View {
     }
 
     private var placeholder: String {
-        if store.error != nil { return "Не удалось получить лог" }
-        if !store.lines.isEmpty { return "Ничего не найдено" }
-        return "Загружаю лог…"
+        if store.error != nil { return String(localized: "Can’t fetch the log") }
+        if !store.lines.isEmpty { return String(localized: "Nothing found") }
+        return String(localized: "Loading the log…")
     }
 
     private var footer: some View {
         HStack(spacing: 8) {
-            Text("Строк")
+            Text("Lines")
             TextField("50", value: Binding(
                 get: { store.config.logLineCount },
                 set: { store.send(.setLineCount($0)) }
@@ -97,7 +97,7 @@ struct LogsView: View {
                     .foregroundStyle(.orange)
                     .lineLimit(1)
             } else if let lastUpdate = store.lastUpdate {
-                Text("Обновлено в \(timeString(lastUpdate))")
+                Text("Updated at \(timeString(lastUpdate))")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

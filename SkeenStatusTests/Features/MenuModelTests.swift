@@ -40,13 +40,13 @@ struct MenuModelTests {
             lastCheck: date(23, 12, 45)
         )
         let model = menuModel(snapshot: snapshot, singBox: SingBoxSnapshot(runtime: runtime), gateway: "192.168.1.1", calendar: utc)
-        #expect(model.title == "Skeen: работает")
+        #expect(model.title == "Skeen: running")
         #expect(model.color == .green)
-        #expect(model.processLine == "PID 5733 · 117 МБ · работает 2d 1h 0m")
-        #expect(model.runtimeLine == "sing-box 1.14.2 · ↓ 1.5 ГБ ↑ 1.0 КБ")
-        #expect(model.lastCheckLine == "Проверено в 23:12:45")
-        #expect(model.routerLine == "Роутер: 192.168.1.1")
-        #expect(model.routeLine == "proxy → NL · по правилам")
+        #expect(model.processLine == "PID 5733 · 117 MB · up 2d 1h 0m")
+        #expect(model.runtimeLine == "sing-box 1.14.2 · ↓ 1.5 GB ↑ 1.0 KB")
+        #expect(model.lastCheckLine == "Checked at 23:12:45")
+        #expect(model.routerLine == "Router: 192.168.1.1")
+        #expect(model.routeLine == "proxy → NL · by rules")
         #expect(model.canStart == false)
     }
 
@@ -57,7 +57,7 @@ struct MenuModelTests {
         #expect(model.runtimeLine == nil)
         #expect(model.routeLine == nil)
         #expect(model.errorLine == "boom")
-        #expect(model.lastCheckLine == "Проверено в —")
+        #expect(model.lastCheckLine == "Checked at —")
     }
 
     @Test func downBannerSaysHowLongItRan() {
@@ -70,8 +70,8 @@ struct MenuModelTests {
             reason: nil
         )
         #expect(banner.id == "skeen.state")
-        #expect(banner.title == "skeen остановлен")
-        #expect(banner.body.hasSuffix("До этого проработал 3 ч 30 мин."))
+        #expect(banner.title == "skeen stopped")
+        #expect(banner.body.hasSuffix("It ran for 3 h 30 min before that."))
         #expect(banner.category?.actions.map(\.id) == [MonitorNotificationAction.start, MonitorNotificationAction.open])
     }
 
@@ -84,21 +84,21 @@ struct MenuModelTests {
             gateway: "192.168.1.1",
             reason: nil
         )
-        #expect(banner.body == "sing-box снова работает (PID 42). Простой: 40 с.")
+        #expect(banner.body == "sing-box runs again (PID 42). Downtime: 40 s.")
         #expect(banner.category == nil)
     }
 
     @Test func unreachableBannerCarriesTheReason() {
-        let banner = notificationContent(.unreachable, state: .unreachable, previousPhaseSince: nil, now: date(0, 0, 0), gateway: "10.0.0.1", reason: "Роутер не отвечает")
-        #expect(banner.body == "Не удаётся связаться с 10.0.0.1 по SSH. Роутер не отвечает.")
+        let banner = notificationContent(.unreachable, state: .unreachable, previousPhaseSince: nil, now: date(0, 0, 0), gateway: "10.0.0.1", reason: "The router doesn’t answer")
+        #expect(banner.body == "Can’t reach 10.0.0.1 over SSH. The router doesn’t answer.")
     }
 
-    @Test func durationsAndBytesInRussian() {
-        #expect(durationString(40) == "40 с")
-        #expect(durationString(125) == "2 мин")
-        #expect(durationString(3 * 3600) == "3 ч")
-        #expect(durationString(26 * 3600) == "1 д 2 ч")
-        #expect(byteString(512) == "512 Б")
-        #expect(byteString(1536) == "1.5 КБ")
+    @Test func durationsAndBytesAreShort() {
+        #expect(durationString(40) == "40 s")
+        #expect(durationString(125) == "2 min")
+        #expect(durationString(3 * 3600) == "3 h")
+        #expect(durationString(26 * 3600) == "1 d 2 h")
+        #expect(byteString(512) == "512 B")
+        #expect(byteString(1536) == "1.5 KB")
     }
 }

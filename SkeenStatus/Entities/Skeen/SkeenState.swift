@@ -40,13 +40,13 @@ extension SkeenState {
         return nil
     }
 
-    /// Short Russian word for the menu, the tooltip, and the settings window.
+    /// Short word for the menu, the tooltip, and the settings window.
     var title: String {
         switch self {
-        case .unknown: return "проверяю…"
-        case .running: return "работает"
-        case .stopped: return "остановлен"
-        case .unreachable: return "роутер недоступен"
+        case .unknown: return String(localized: "checking…")
+        case .running: return String(localized: "running")
+        case .stopped: return String(localized: "stopped")
+        case .unreachable: return String(localized: "router unreachable")
         }
     }
 }

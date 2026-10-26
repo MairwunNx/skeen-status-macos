@@ -9,34 +9,34 @@ struct ConnectionSettingsView: View {
 
     var body: some View {
         SettingsPage(store: store) {
-            SectionCard(title: "Роутер", systemImage: "wifi.router") {
+            SectionCard(title: "Router", systemImage: "wifi.router") {
                 Grid(alignment: .leading, horizontalSpacing: 12, verticalSpacing: 10) {
                     GridRow {
-                        Text("Адрес")
+                        Text("Address")
                         TextField("192.168.1.1", text: $store.draft.gateway)
                             .textFieldStyle(.roundedBorder)
                             .accessibilityIdentifier("settings.gateway")
-                        Text("Порт SSH")
+                        Text("SSH Port")
                         TextField("2022", value: $store.draft.port, format: .number.grouping(.never))
                             .textFieldStyle(.roundedBorder)
                             .frame(width: 80)
                     }
                     GridRow {
-                        Text("Логин")
+                        Text("Login")
                         TextField("admin", text: $store.draft.login)
                             .textFieldStyle(.roundedBorder)
                             .gridCellColumns(3)
                     }
                     GridRow {
-                        Text("Пароль")
-                        SecureField("Хранится в Связке ключей", text: $store.password)
+                        Text("Password")
+                        SecureField("Kept in the Keychain", text: $store.password)
                             .textFieldStyle(.roundedBorder)
                             .gridCellColumns(3)
                     }
                 }
 
                 HStack(spacing: 12) {
-                    Button(store.test == .running ? "Проверяю…" : "Проверить связь") {
+                    Button(store.test == .running ? String(localized: "Checking…") : String(localized: "Test Connection")) {
                         store.send(.testTapped)
                     }
                     .disabled(store.test == .running)
@@ -61,43 +61,43 @@ struct ConnectionSettingsView: View {
                 hostKeyRow
             }
 
-            SectionCard(title: "Команды после входа", systemImage: "terminal") {
+            SectionCard(title: "Commands After Login", systemImage: "terminal") {
                 StringListEditor(
-                    hint: "Выполняются по порядку в той же SSH-сессии, до проверки статуса. На Keenetic нужна «exec sh», чтобы попасть из CLI в оболочку.",
+                    hint: "Run in order in the same SSH session, before the status check. Keenetic needs “exec sh” to get from its CLI to a shell.",
                     items: $store.draft.postConnectCommands
                 )
             }
 
-            SectionCard(title: "Проверка статуса", systemImage: "waveform.path.ecg") {
+            SectionCard(title: "Status Check", systemImage: "waveform.path.ecg") {
                 Grid(alignment: .leading, horizontalSpacing: 12, verticalSpacing: 10) {
                     GridRow {
-                        Text("Команда")
+                        Text("Command")
                         TextField("skeen status", text: $store.draft.statusCommand)
                             .textFieldStyle(.roundedBorder)
                             .gridCellColumns(2)
                     }
                     GridRow {
-                        Text("Команда skeen")
+                        Text("skeen Command")
                         TextField("skeen", text: $store.draft.skeenCommand)
                             .textFieldStyle(.roundedBorder)
                             .gridCellColumns(2)
                     }
                     GridRow {
-                        Text("Как понять, что работает")
+                        Text("How to Tell It Runs")
                         Picker("", selection: $store.draft.statusDetection) {
-                            Text("Автоматически").tag(StatusDetection.automatic)
-                            Text("По своему правилу").tag(StatusDetection.rule)
+                            Text("Automatically").tag(StatusDetection.automatic)
+                            Text("By My Own Rule").tag(StatusDetection.rule)
                         }
                         .labelsHidden()
                         .gridCellColumns(2)
                     }
                     if store.draft.statusDetection == .rule {
                         GridRow {
-                            Text("Признак «работает»")
+                            Text("“Running” Marker")
                             TextField("Status: running", text: $store.draft.runningRule.pattern)
                                 .textFieldStyle(.roundedBorder)
                             Picker("", selection: $store.draft.runningRule.mode) {
-                                Text("Подстрока").tag(MatchMode.substring)
+                                Text("Substring").tag(MatchMode.substring)
                                 Text("Regex").tag(MatchMode.regex)
                             }
                             .labelsHidden()
@@ -105,40 +105,40 @@ struct ConnectionSettingsView: View {
                         }
                     }
                     GridRow {
-                        Text("Интервал")
+                        Text("Interval")
                         HStack(spacing: 6) {
                             TextField("15", value: $store.draft.intervalSeconds, format: .number.grouping(.never))
                                 .textFieldStyle(.roundedBorder)
                                 .frame(width: 70)
                             Stepper("", value: $store.draft.intervalSeconds, in: 3...3600)
                                 .labelsHidden()
-                            Text("секунд")
+                            Text("seconds")
                         }
                         .gridCellColumns(2)
                     }
                 }
-                Text("Автоматически: работает, если skeen показал PID или слово «running», на любом языке.")
+                Text("Automatically: running when skeen shows a PID or the word “running”, in any language.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
 
-            SectionCard(title: "Clash API sing-box", systemImage: "point.3.connected.trianglepath.dotted") {
-                Toggle("Спрашивать sing-box напрямую", isOn: $store.draft.clashAPIEnabled)
+            SectionCard(title: "sing-box Clash API", systemImage: "point.3.connected.trianglepath.dotted") {
+                Toggle("Ask sing-box Directly", isOn: $store.draft.clashAPIEnabled)
                 if store.draft.clashAPIEnabled {
                     Grid(alignment: .leading, horizontalSpacing: 12, verticalSpacing: 10) {
                         GridRow {
-                            Text("Адрес")
+                            Text("Address")
                             TextField("http://\(store.draft.gateway):9090", text: $store.draft.clashAPIURL)
                                 .textFieldStyle(.roundedBorder)
                         }
                         GridRow {
-                            Text("Секрет")
-                            SecureField("Пусто, если не задан", text: $store.clashSecret)
+                            Text("Secret")
+                            SecureField("Empty if not set", text: $store.clashSecret)
                                 .textFieldStyle(.roundedBorder)
                         }
                     }
                 }
-                Text("Это `experimental.clash_api` из конфига sing-box. Отсюда берутся трафик, соединения и текущий выход на «Обзоре», и по нему видно, что sing-box жив, даже если SSH отвалился.")
+                Text("This is `experimental.clash_api` in the sing-box config. The overview takes traffic, connections, and the current outbound from it, and it shows sing-box is alive even when SSH drops.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -152,7 +152,7 @@ struct ConnectionSettingsView: View {
             Image(systemName: key.isBlank ? "lock.open" : "lock.fill")
                 .foregroundStyle(.secondary)
             VStack(alignment: .leading, spacing: 2) {
-                Text(key.isBlank ? "Ключ роутера ещё не закреплён" : "Ключ роутера закреплён")
+                Text(key.isBlank ? String(localized: "The router’s key isn’t pinned yet") : String(localized: "The router’s key is pinned"))
                     .font(.callout)
                 if !key.isBlank {
                     Text(key)
@@ -165,7 +165,7 @@ struct ConnectionSettingsView: View {
             }
             Spacer()
             if !key.isBlank {
-                Button("Забыть ключ") { store.send(.forgetHostKeyTapped) }
+                Button("Forget Key") { store.send(.forgetHostKeyTapped) }
                     .glassButton(prominent: false, reduceTransparency: reduceTransparency)
             }
         }
@@ -178,21 +178,21 @@ struct ScriptsSettingsView: View {
 
     var body: some View {
         SettingsPage(store: store) {
-            SectionCard(title: "Когда skeen остановился", systemImage: "bolt.slash") {
+            SectionCard(title: "When skeen Stops", systemImage: "bolt.slash") {
                 StringListEditor(
-                    hint: "Выполняются на этом Mac через /bin/sh -c, по порядку. Ошибка одной команды не останавливает остальные.",
+                    hint: "Run on this Mac through /bin/sh -c, in order. One failing command doesn’t stop the rest.",
                     items: $store.draft.onDownScripts
                 )
             }
-            SectionCard(title: "Когда skeen снова работает", systemImage: "bolt") {
+            SectionCard(title: "When skeen Runs Again", systemImage: "bolt") {
                 StringListEditor(
-                    hint: "Выполняются на этом Mac через /bin/sh -c, по порядку.",
+                    hint: "Run on this Mac through /bin/sh -c, in order.",
                     items: $store.draft.onRecoverScripts
                 )
             }
-            SectionCard(title: "Недоступный роутер", systemImage: "wifi.exclamationmark") {
-                Toggle("Считать недоступный роутер остановленным skeen", isOn: $store.draft.treatUnreachableAsDown)
-                Text("Тогда потеря связи с роутером тоже запустит сценарии «остановился».")
+            SectionCard(title: "Unreachable Router", systemImage: "wifi.exclamationmark") {
+                Toggle("Treat an unreachable router as stopped skeen", isOn: $store.draft.treatUnreachableAsDown)
+                Text("Then losing the router also runs the “stops” scripts.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -207,31 +207,59 @@ struct GeneralSettingsView: View {
 
     var body: some View {
         SettingsPage(store: store) {
-            SectionCard(title: "Уведомления", systemImage: "bell.badge") {
-                Toggle("Сообщать, когда skeen останавливается и снова работает", isOn: $store.draft.notificationsEnabled)
-                Toggle("Сообщать, когда роутер недоступен", isOn: $store.draft.notifyUnreachable)
-                    .disabled(!store.draft.notificationsEnabled)
-                Text("Одна плохая проверка ещё не повод: приложение перепроверяет через 3 секунды и сообщает, только если всё подтвердилось.")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-            SectionCard(title: "Запуск", systemImage: "power") {
-                Toggle("Открывать при входе в систему", isOn: $store.draft.launchAtLogin)
-                if store.loginItemEnabled != store.draft.launchAtLogin {
-                    Text(store.loginItemEnabled ? "Сейчас включено" : "Сейчас выключено")
+            SectionCard(title: "Language", systemImage: "globe") {
+                Picker("Language", selection: Binding(
+                    get: { store.language },
+                    set: { store.send(.languageChanged($0)) }
+                )) {
+                    Text("As in macOS").tag(AppLanguage.system)
+                    Text(verbatim: "English").tag(AppLanguage.english)
+                    Text(verbatim: "Русский").tag(AppLanguage.russian)
+                }
+                .pickerStyle(.segmented)
+                .labelsHidden()
+                .fixedSize()
+                .accessibilityIdentifier("settings.language")
+                if store.needsRelaunch {
+                    HStack {
+                        Text("The new language shows after a relaunch.")
+                            .font(.callout)
+                            .foregroundStyle(.secondary)
+                        Spacer()
+                        Button("Relaunch Now") { store.send(.relaunchTapped) }
+                            .glassButton(prominent: true, reduceTransparency: reduceTransparency)
+                    }
+                } else {
+                    Text("You can also pick it in System Settings → General → Language & Region → Applications.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
             }
-            SectionCard(title: "Перенос на другой Mac", systemImage: "arrow.left.arrow.right") {
-                Text("Файл с настройками, паролем SSH, секретом Clash API и ключом роутера, зашифрованный вашим кодом: AES-256-GCM, ключ из кода через PBKDF2-SHA256. Без кода файл бесполезен, поэтому передавайте код отдельно.")
+            SectionCard(title: "Notifications", systemImage: "bell.badge") {
+                Toggle("Tell me when skeen stops and runs again", isOn: $store.draft.notificationsEnabled)
+                Toggle("Tell me when the router is unreachable", isOn: $store.draft.notifyUnreachable)
+                    .disabled(!store.draft.notificationsEnabled)
+                Text("One bad check is no reason to worry: the app checks again 3 seconds later and tells you only if it holds.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            SectionCard(title: "Startup", systemImage: "power") {
+                Toggle("Open at login", isOn: $store.draft.launchAtLogin)
+                if store.loginItemEnabled != store.draft.launchAtLogin {
+                    Text(store.loginItemEnabled ? String(localized: "On right now") : String(localized: "Off right now"))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            SectionCard(title: "Move to Another Mac", systemImage: "arrow.left.arrow.right") {
+                Text("A file with the settings, the SSH password, the Clash API secret, and the router’s key, sealed with your passphrase: AES-256-GCM under a PBKDF2-SHA256 key. Without the passphrase the file is useless, so send the passphrase separately.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
                 HStack {
-                    Button("Экспортировать…") { store.send(.exportTapped) }
+                    Button("Export…") { store.send(.exportTapped) }
                         .glassButton(prominent: false, reduceTransparency: reduceTransparency)
                         .accessibilityIdentifier("settings.export")
-                    Button("Импортировать…") { store.send(.importTapped) }
+                    Button("Import…") { store.send(.importTapped) }
                         .glassButton(prominent: false, reduceTransparency: reduceTransparency)
                         .accessibilityIdentifier("settings.import")
                     if let notice = store.transferNotice {
@@ -242,21 +270,21 @@ struct GeneralSettingsView: View {
                     }
                 }
             }
-            SectionCard(title: "Диагностика", systemImage: "stethoscope") {
+            SectionCard(title: "Diagnostics", systemImage: "stethoscope") {
                 HStack {
-                    Text("Журнал приложения: подключения, смены состояния, сценарии.")
+                    Text("The app’s own log: connections, state changes, scripts.")
                         .font(.callout)
                         .foregroundStyle(.secondary)
                     Spacer()
-                    Button("Открыть журнал") { store.send(.openAppLogTapped) }
+                    Button("Open Log") { store.send(.openAppLogTapped) }
                         .glassButton(prominent: false, reduceTransparency: reduceTransparency)
                 }
                 HStack {
-                    Text("Вернуть все настройки по умолчанию.")
+                    Text("Reset every setting to its default.")
                         .font(.callout)
                         .foregroundStyle(.secondary)
                     Spacer()
-                    Button("Сбросить…") { store.send(.resetTapped) }
+                    Button("Reset…") { store.send(.resetTapped) }
                         .glassButton(prominent: false, reduceTransparency: reduceTransparency)
                 }
             }
@@ -272,19 +300,19 @@ private struct PassphraseSheet: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
-            Text(isExport ? "Код для файла настроек" : "Код от файла настроек")
+            Text(isExport ? String(localized: "Passphrase for the Settings File") : String(localized: "Passphrase of the Settings File"))
                 .font(.title3.weight(.semibold))
             Text(isExport
-                 ? "Придумайте код не короче \(SettingsTransfer.minimumPassphraseLength) символов. Он понадобится на другом Mac, восстановить его нельзя."
-                 : "Введите код, которым файл зашифровали. Текущие настройки заменятся настройками из файла.")
+                 ? String(localized: "Choose a passphrase of at least \(SettingsTransfer.minimumPassphraseLength) characters. You’ll need it on the other Mac, and nobody can recover it.")
+                 : String(localized: "Enter the passphrase the file was sealed with. The settings from the file replace the current ones."))
                 .font(.callout)
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
-            SecureField("Код", text: $store.passphrase)
+            SecureField("Passphrase", text: $store.passphrase)
                 .textFieldStyle(.roundedBorder)
                 .onSubmit { store.send(.transferConfirmed) }
             if isExport {
-                SecureField("Ещё раз", text: $store.passphraseConfirmation)
+                SecureField("Once more", text: $store.passphraseConfirmation)
                     .textFieldStyle(.roundedBorder)
                     .onSubmit { store.send(.transferConfirmed) }
             }
@@ -298,9 +326,9 @@ private struct PassphraseSheet: View {
                     ProgressView().controlSize(.small)
                 }
                 Spacer()
-                Button("Отмена", role: .cancel) { store.send(.transferCancelled) }
+                Button("Cancel", role: .cancel) { store.send(.transferCancelled) }
                     .keyboardShortcut(.cancelAction)
-                Button(isExport ? "Зашифровать" : "Расшифровать") { store.send(.transferConfirmed) }
+                Button(isExport ? String(localized: "Encrypt") : String(localized: "Decrypt")) { store.send(.transferConfirmed) }
                     .keyboardShortcut(.defaultAction)
                     .buttonStyle(.glassProminent)
                     .disabled(store.passphrase.isEmpty || store.isTransferring)
@@ -377,14 +405,14 @@ private struct SettingsPage<Content: View>: View {
                         .foregroundStyle(.orange)
                         .font(.callout)
                 } else {
-                    Text("Есть несохранённые изменения")
+                    Text("There are unsaved changes")
                         .foregroundStyle(.secondary)
                         .font(.callout)
                 }
                 Spacer()
-                Button("Отменить") { store.send(.revertTapped) }
+                Button("Revert") { store.send(.revertTapped) }
                     .glassButton(prominent: false, reduceTransparency: reduceTransparency)
-                Button("Сохранить") { store.send(.saveTapped) }
+                Button("Save") { store.send(.saveTapped) }
                     .keyboardShortcut("s", modifiers: .command)
                     .glassButton(prominent: true, reduceTransparency: reduceTransparency)
                     .accessibilityIdentifier("settings.save")

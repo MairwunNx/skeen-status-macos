@@ -6,7 +6,7 @@ struct ServiceControlView: View {
     @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
 
     var body: some View {
-        SectionCard(title: "Управление skeen", systemImage: "switch.2") {
+        SectionCard(title: "skeen Control", systemImage: "switch.2") {
             versionRow
             Divider()
             VStack(alignment: .leading, spacing: 10) {
@@ -28,7 +28,7 @@ struct ServiceControlView: View {
                 .foregroundStyle(.secondary)
             VStack(alignment: .leading, spacing: 2) {
                 let version = store.snapshot.version
-                Text(version?.summary ?? (store.isLoadingVersion ? "Узнаю версию…" : "Версия неизвестна"))
+                Text(version?.summary ?? (store.isLoadingVersion ? String(localized: "Getting the version…") : String(localized: "Version unknown")))
                     .font(.callout)
                 if let environment = version?.environment {
                     Text(environment)
@@ -48,7 +48,7 @@ struct ServiceControlView: View {
             }
             .disabled(store.isLoadingVersion)
             .glassButton(prominent: false, reduceTransparency: reduceTransparency)
-            .help("Обновить версию")
+            .help("Refresh the version")
             .accessibilityIdentifier("service.refreshVersion")
         }
     }
@@ -83,7 +83,7 @@ struct ServiceControlView: View {
     private func outcomeView(_ outcome: ServiceControlFeature.Outcome) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             Label(
-                "«\(outcome.control.title)»: \(outcome.succeeded ? "готово" : "ошибка")",
+                outcome.succeeded ? String(localized: "“\(outcome.control.title)”: done") : String(localized: "“\(outcome.control.title)”: failed"),
                 systemImage: outcome.succeeded ? "checkmark.circle.fill" : "xmark.circle.fill"
             )
             .foregroundStyle(outcome.succeeded ? .green : .red)

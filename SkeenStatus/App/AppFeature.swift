@@ -80,11 +80,11 @@ enum SettingsTab: String, CaseIterable, Identifiable, Sendable {
 
     var title: String {
         switch self {
-        case .overview: return "Обзор"
-        case .logs: return "Лог sing-box"
-        case .connection: return "Подключение"
-        case .scripts: return "Сценарии"
-        case .general: return "Общие"
+        case .overview: return String(localized: "Overview")
+        case .logs: return String(localized: "sing-box Log")
+        case .connection: return String(localized: "Connection")
+        case .scripts: return String(localized: "Scripts")
+        case .general: return String(localized: "General")
         }
     }
 

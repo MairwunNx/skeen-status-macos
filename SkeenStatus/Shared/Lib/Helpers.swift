@@ -24,21 +24,21 @@ func timeString(_ date: Date, calendar: Calendar = .current) -> String {
     return String(format: "%02d:%02d:%02d", c.hour ?? 0, c.minute ?? 0, c.second ?? 0)
 }
 
-/// Short Russian duration such as «3 д 4 ч», «12 мин» or «40 с».
+/// Short duration such as “3 d 4 h”, “12 min”, or “40 s”, in the app’s language.
 func durationString(_ interval: TimeInterval) -> String {
     let seconds = max(0, Int(interval.rounded()))
     let days = seconds / 86_400
     let hours = (seconds % 86_400) / 3_600
     let minutes = (seconds % 3_600) / 60
-    if days > 0 { return hours > 0 ? "\(days) д \(hours) ч" : "\(days) д" }
-    if hours > 0 { return minutes > 0 ? "\(hours) ч \(minutes) мин" : "\(hours) ч" }
-    if minutes > 0 { return "\(minutes) мин" }
-    return "\(seconds) с"
+    if days > 0 { return hours > 0 ? String(localized: "\(days) d \(hours) h") : String(localized: "\(days) d") }
+    if hours > 0 { return minutes > 0 ? String(localized: "\(hours) h \(minutes) min") : String(localized: "\(hours) h") }
+    if minutes > 0 { return String(localized: "\(minutes) min") }
+    return String(localized: "\(seconds) s")
 }
 
-/// Binary byte count with one decimal, e.g. «1.5 ГБ».
+/// Binary byte count with one decimal, e.g. “1.5 GB”.
 func byteString(_ bytes: Int64) -> String {
-    let units = ["Б", "КБ", "МБ", "ГБ", "ТБ"]
+    let units = [String(localized: "B"), String(localized: "KB"), String(localized: "MB"), String(localized: "GB"), String(localized: "TB")]
     var value = Double(max(0, bytes))
     var unit = 0
     while value >= 1024, unit < units.count - 1 {

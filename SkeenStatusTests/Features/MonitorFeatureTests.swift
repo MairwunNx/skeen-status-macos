@@ -89,13 +89,13 @@ struct MonitorFeatureTests {
 
         #expect(store.state.snapshot.state == .stopped)
         #expect(ran.value == ["echo down"])
-        #expect(sent.value.map(\.title) == ["skeen остановлен"])
+        #expect(sent.value.map(\.title) == ["skeen stopped"])
     }
 
     @Test func sshFailureMakesTheRouterUnreachableAndSaysWhy() async {
         let sent = LockIsolated<[LocalNotification]>([])
         let ran = LockIsolated<[String]>([])
-        let failure = SSHSessionError.connectFailed("Роутер не отвечает")
+        let failure = SSHSessionError.connectFailed("The router doesn’t answer")
         let store = makeStore(config: config, readings: [.success(running), .failure(failure), .failure(failure)], sent: sent, ran: ran)
 
         await store.send(.checkNow)
@@ -107,9 +107,9 @@ struct MonitorFeatureTests {
         await store.finish()
 
         #expect(store.state.snapshot.state == .unreachable)
-        #expect(store.state.snapshot.lastError == "Роутер не отвечает")
+        #expect(store.state.snapshot.lastError == "The router doesn’t answer")
         #expect(ran.value.isEmpty)
-        #expect(sent.value.map(\.body) == ["Не удаётся связаться с 192.168.1.1 по SSH. Роутер не отвечает."])
+        #expect(sent.value.map(\.body) == ["Can’t reach 192.168.1.1 over SSH. The router doesn’t answer."])
     }
 
     @Test func mutedNotificationsStillRunScripts() async {

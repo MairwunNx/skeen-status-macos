@@ -52,13 +52,13 @@ final class StatusItemController: NSObject, NSMenuDelegate {
 
         menu.addItem(.separator())
         if model.canStart {
-            menu.addItem(action("Запустить skeen", #selector(startService)))
+            menu.addItem(action(String(localized: "Start skeen"), #selector(startService)))
         }
-        menu.addItem(action("Проверить сейчас", #selector(checkNow), key: "r"))
-        menu.addItem(action("Лог sing-box…", #selector(openLogs)))
-        menu.addItem(action("Настройки…", #selector(openSettings), key: ","))
+        menu.addItem(action(String(localized: "Check Now"), #selector(checkNow), key: "r"))
+        menu.addItem(action(String(localized: "sing-box Log…"), #selector(openLogs)))
+        menu.addItem(action(String(localized: "Settings…"), #selector(openSettings), key: ","))
         menu.addItem(.separator())
-        menu.addItem(action("Выйти", #selector(quit), key: "q"))
+        menu.addItem(action(String(localized: "Quit"), #selector(quit), key: "q"))
     }
 
     /// The colored dot and the state; a click opens the overview. The dot

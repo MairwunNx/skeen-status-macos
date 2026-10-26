@@ -59,9 +59,9 @@ enum ClashAPIError: Error, Equatable, LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .unauthorized: return "Clash API не принял секрет"
-        case .unreachable(let reason): return "Clash API недоступен: \(reason)"
-        case .badResponse(let code): return "Clash API ответил кодом \(code)"
+        case .unauthorized: return String(localized: "The Clash API rejected the secret")
+        case .unreachable(let reason): return String(localized: "The Clash API is unreachable: \(reason)")
+        case .badResponse(let code): return String(localized: "The Clash API answered with code \(code)")
         }
     }
 }

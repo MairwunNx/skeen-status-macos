@@ -19,11 +19,11 @@ struct SkeenStateTests {
         #expect(SkeenState.unreachable.process == nil)
     }
 
-    @Test func russianTitlePerState() {
-        #expect(SkeenState.unknown.title == "проверяю…")
-        #expect(SkeenState.running(SkeenProcess()).title == "работает")
-        #expect(SkeenState.stopped.title == "остановлен")
-        #expect(SkeenState.unreachable.title == "роутер недоступен")
+    @Test func titlePerState() {
+        #expect(SkeenState.unknown.title == "checking…")
+        #expect(SkeenState.running(SkeenProcess()).title == "running")
+        #expect(SkeenState.stopped.title == "stopped")
+        #expect(SkeenState.unreachable.title == "router unreachable")
     }
 
     @Test func statusColorMapping() {

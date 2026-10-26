@@ -18,10 +18,10 @@ enum SettingsTransferError: Error, Equatable, LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .weakPassphrase: return "Код должен быть не короче \(SettingsTransfer.minimumPassphraseLength) символов"
-        case .notASettingsFile: return "Это не файл настроек Skeen Status"
-        case .unsupportedVersion(let version): return "Файл сделан версией формата \(version), эта версия приложения её не знает"
-        case .wrongPassphrase: return "Неверный код, или файл повреждён"
+        case .weakPassphrase: return String(localized: "The passphrase needs at least \(SettingsTransfer.minimumPassphraseLength) characters")
+        case .notASettingsFile: return String(localized: "This isn’t a Skeen Status settings file")
+        case .unsupportedVersion(let version): return String(localized: "The file uses format version \(version), which this version of the app doesn’t know")
+        case .wrongPassphrase: return String(localized: "Wrong passphrase, or the file is damaged")
         }
     }
 }

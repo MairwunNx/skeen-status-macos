@@ -12,21 +12,21 @@ enum SkeenControl: String, CaseIterable, Identifiable, Sendable {
 
     var title: String {
         switch self {
-        case .start: return "Запустить"
-        case .stop: return "Остановить"
-        case .restart: return "Перезапустить"
-        case .reload: return "Перезагрузить"
-        case .check: return "Проверить конфиг"
+        case .start: return String(localized: "Start")
+        case .stop: return String(localized: "Stop")
+        case .restart: return String(localized: "Restart")
+        case .reload: return String(localized: "Reload")
+        case .check: return String(localized: "Check Config")
         }
     }
 
     var hint: String {
         switch self {
-        case .start: return "Запускает sing-box. Если он уже работает, ничего не меняет."
-        case .stop: return "Останавливает sing-box. Трафик пойдёт мимо прокси."
-        case .restart: return "Полный перезапуск: skeen заново настраивает файрвол и sing-box."
-        case .reload: return "Перезапускает только sing-box, правила файрвола остаются."
-        case .check: return "Проверяет конфигурацию sing-box, ничего не перезапуская."
+        case .start: return String(localized: "Starts sing-box. Changes nothing if it already runs.")
+        case .stop: return String(localized: "Stops sing-box. Traffic will bypass the proxy.")
+        case .restart: return String(localized: "A full restart: skeen sets up the firewall and sing-box again.")
+        case .reload: return String(localized: "Restarts only sing-box and keeps the firewall rules.")
+        case .check: return String(localized: "Checks the sing-box config without restarting anything.")
         }
     }
 
