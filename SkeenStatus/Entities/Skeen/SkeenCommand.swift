@@ -1,11 +1,12 @@
 import Foundation
 
 /// The service-control actions exposed in Settings, mapped to `skeen` subcommands.
-nonisolated enum SkeenControl: String, CaseIterable, Identifiable, Sendable {
+enum SkeenControl: String, CaseIterable, Identifiable, Sendable {
     case start
     case stop
     case restart
     case reload
+    case check
 
     var id: String { rawValue }
 
@@ -15,15 +16,17 @@ nonisolated enum SkeenControl: String, CaseIterable, Identifiable, Sendable {
         case .stop: return "Остановить"
         case .restart: return "Перезапустить"
         case .reload: return "Перезагрузить"
+        case .check: return "Проверить конфиг"
         }
     }
 
     var hint: String {
         switch self {
-        case .start: return "Запускает Sing-box. Проверяет конфигурацию и не стартует повторно, если уже работает."
-        case .stop: return "Останавливает Sing-box. Если процесс не найден — сообщает, что демон уже остановлен."
-        case .restart: return "Останавливает и затем снова запускает Sing-box."
-        case .reload: return "Перезагружает Sing-box (полный рестарт, не hot-reload) без изменения правил файрвола."
+        case .start: return "Запускает sing-box. Если он уже работает, ничего не меняет."
+        case .stop: return "Останавливает sing-box. Трафик пойдёт мимо прокси."
+        case .restart: return "Полный перезапуск: skeen заново настраивает файрвол и sing-box."
+        case .reload: return "Перезапускает только sing-box, правила файрвола остаются."
+        case .check: return "Проверяет конфигурацию sing-box, ничего не перезапуская."
         }
     }
 
@@ -33,20 +36,27 @@ nonisolated enum SkeenControl: String, CaseIterable, Identifiable, Sendable {
         case .stop: return "stop.fill"
         case .restart: return "arrow.clockwise"
         case .reload: return "arrow.triangle.2.circlepath"
+        case .check: return "checkmark.seal"
         }
     }
 
-    /// `restart`/`reload` briefly interrupt traffic, so the UI confirms them first.
+    /// `stop`, `restart`, and `reload` interrupt traffic, so the UI confirms them first.
     var isDisruptive: Bool {
         switch self {
-        case .start, .stop: return false
-        case .restart, .reload: return true
+        case .start, .check: return false
+        case .stop, .restart, .reload: return true
         }
+    }
+
+    /// Whether the command may change the running state, so a fresh status
+    /// check should follow it.
+    var changesState: Bool {
+        self != .check
     }
 }
 
 /// Parsed output of `skeen version`.
-nonisolated struct SkeenVersion: Equatable, Sendable {
+struct SkeenVersion: Equatable, Sendable {
     var skeen: String?
     var singBox: String?
     var environment: String?
@@ -70,7 +80,7 @@ nonisolated struct SkeenVersion: Equatable, Sendable {
 
 /// Extracts version fields from the textual output of `skeen version`. Decorative
 /// separator lines and any surrounding shell noise are ignored.
-nonisolated func parseSkeenVersion(_ raw: String) -> SkeenVersion {
+func parseSkeenVersion(_ raw: String) -> SkeenVersion {
     let clean = cleanOutput(raw)
 
     func value(_ key: String) -> String? {

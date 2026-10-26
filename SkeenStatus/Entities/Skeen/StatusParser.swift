@@ -7,7 +7,7 @@ import Foundation
 /// prints a `PID:` line only while sing-box runs, and the words `running` and
 /// `stopped` survive every translation. Output that says neither is
 /// `.unknown`, so a missing binary never looks like a crash.
-nonisolated func parseStatus(_ raw: String, detection: StatusDetection, rule: RunningRule) -> SkeenState {
+func parseStatus(_ raw: String, detection: StatusDetection, rule: RunningRule) -> SkeenState {
     let clean = cleanOutput(raw)
     let running: Bool
     switch detection {
@@ -23,10 +23,14 @@ nonisolated func parseStatus(_ raw: String, detection: StatusDetection, rule: Ru
         running = matchesRunning(clean, rule: rule)
     }
     guard running else { return .stopped }
-    return .running(pid: parseFirstInt(clean, key: "PID"), memoryMB: parseMemoryMB(clean))
+    return .running(SkeenProcess(
+        pid: parseFirstInt(clean, key: "PID"),
+        memoryMB: parseMemoryMB(clean),
+        uptime: parseUptime(clean)
+    ))
 }
 
-nonisolated func matchesRunning(_ raw: String, rule: RunningRule) -> Bool {
+func matchesRunning(_ raw: String, rule: RunningRule) -> Bool {
     let pattern = rule.pattern
     guard !pattern.isEmpty else { return false }
     switch rule.mode {
@@ -39,22 +43,27 @@ nonisolated func matchesRunning(_ raw: String, rule: RunningRule) -> Bool {
     }
 }
 
-nonisolated func parseFirstInt(_ raw: String, key: String) -> Int? {
+func parseFirstInt(_ raw: String, key: String) -> Int? {
     firstCapture(in: raw, pattern: "\(NSRegularExpression.escapedPattern(for: key)):\\s*(\\d+)")
         .flatMap(Int.init)
 }
 
 /// Reads the resident memory from `Memory: 117 MB` or its Russian form `Память: 63 MB`.
-nonisolated func parseMemoryMB(_ raw: String) -> Int? {
+func parseMemoryMB(_ raw: String) -> Int? {
     firstCapture(in: raw, pattern: "(?:Memory|Память):\\s*(\\d+)\\s*MB").flatMap(Int.init)
 }
 
-private nonisolated func containsWord(_ raw: String, _ word: String) -> Bool {
+/// Reads `Uptime: 2d 3h 4m` or `Время работы: 18d 8h 51m`.
+func parseUptime(_ raw: String) -> String? {
+    firstCapture(in: raw, pattern: "(?:Uptime|Время работы):\\s*([0-9dhms ]+?)\\s*$")
+}
+
+private func containsWord(_ raw: String, _ word: String) -> Bool {
     firstCapture(in: raw, pattern: "(?i)\\b(\(word))\\b") != nil
 }
 
-private nonisolated func firstCapture(in raw: String, pattern: String) -> String? {
-    guard let regex = try? NSRegularExpression(pattern: pattern) else { return nil }
+private func firstCapture(in raw: String, pattern: String) -> String? {
+    guard let regex = try? NSRegularExpression(pattern: pattern, options: [.anchorsMatchLines]) else { return nil }
     let range = NSRange(raw.startIndex..., in: raw)
     guard
         let match = regex.firstMatch(in: raw, range: range),

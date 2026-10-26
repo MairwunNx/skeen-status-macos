@@ -1,7 +1,7 @@
 import Foundation
 
 /// Severity of a sing-box log line, used to tint the row faintly in the UI.
-nonisolated enum LogLevel: String, Equatable, Sendable {
+enum LogLevel: String, Equatable, Sendable {
     case trace
     case debug
     case info
@@ -44,25 +44,25 @@ nonisolated enum LogLevel: String, Equatable, Sendable {
 /// One parsed sing-box log line: a formatted local timestamp, a severity and
 /// the remaining message text. Lines that don't match the expected shape are
 /// kept verbatim as `.other` with an empty time.
-nonisolated struct LogLine: Identifiable, Equatable, Sendable {
+struct LogLine: Identifiable, Equatable, Sendable {
     let id: Int
     let time: String
     let level: LogLevel
     let message: String
 }
 
-private nonisolated let logLineRegex = try! NSRegularExpression(
+private let logLineRegex = try! NSRegularExpression(
     pattern: #"^([+-]\d{4})\s+(\d{4}-\d{2}-\d{2})\s+(\d{2}:\d{2}:\d{2})\s+(\w+)\s+(.*)$"#
 )
 
-private nonisolated func logInputFormatter() -> DateFormatter {
+private func logInputFormatter() -> DateFormatter {
     let f = DateFormatter()
     f.locale = Locale(identifier: "en_US_POSIX")
     f.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
     return f
 }
 
-private nonisolated func logTimeFormatter(_ timeZone: TimeZone) -> DateFormatter {
+private func logTimeFormatter(_ timeZone: TimeZone) -> DateFormatter {
     let f = DateFormatter()
     f.locale = Locale(identifier: "en_US_POSIX")
     f.dateFormat = "HH:mm:ss"
@@ -75,7 +75,7 @@ private nonisolated func logTimeFormatter(_ timeZone: TimeZone) -> DateFormatter
 /// The on-disk format is `+0000 2026-06-22 19:14:52 INFO <message>`; the leading
 /// offset/date/time is converted into a clean `HH:mm:ss` marker in `timeZone`
 /// (the local Mac time by default).
-nonisolated func parseLogLines(_ raw: String, timeZone: TimeZone = .current) -> [LogLine] {
+func parseLogLines(_ raw: String, timeZone: TimeZone = .current) -> [LogLine] {
     let input = logInputFormatter()
     let output = logTimeFormatter(timeZone)
 
@@ -89,7 +89,7 @@ nonisolated func parseLogLines(_ raw: String, timeZone: TimeZone = .current) -> 
     }
 }
 
-private nonisolated func parseLogLine(
+private func parseLogLine(
     _ line: String,
     id: Int,
     input: DateFormatter,
