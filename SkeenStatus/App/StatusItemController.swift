@@ -61,11 +61,15 @@ final class StatusItemController: NSObject, NSMenuDelegate {
         menu.addItem(action("Выйти", #selector(quit), key: "q"))
     }
 
+    /// The colored dot and the state; a click opens the overview. The dot
+    /// is a glyph in the title, since macOS 26 drops custom item images.
     private func header(_ title: String, color: StatusColor) -> NSMenuItem {
-        let item = NSMenuItem(title: title, action: nil, keyEquivalent: "")
-        item.image = Self.indicatorImage(for: color)
-        item.attributedTitle = NSAttributedString(string: title, attributes: [.font: NSFont.menuFont(ofSize: 0).bold])
-        item.isEnabled = false
+        let item = NSMenuItem(title: title, action: #selector(openOverview), keyEquivalent: "")
+        item.target = self
+        let font = NSFont.menuFont(ofSize: 0)
+        let text = NSMutableAttributedString(string: "● ", attributes: [.font: font, .foregroundColor: Self.nsColor(for: color)])
+        text.append(NSAttributedString(string: title, attributes: [.font: font.bold]))
+        item.attributedTitle = text
         return item
     }
 
@@ -84,19 +88,24 @@ final class StatusItemController: NSObject, NSMenuDelegate {
     @objc private func checkNow() { store.send(.monitor(.checkNow)) }
     @objc private func startService() { store.send(.service(.run(.start))) }
     @objc private func openSettings() { store.send(.openSettings(nil)) }
+    @objc private func openOverview() { store.send(.openSettings(.overview)) }
     @objc private func openLogs() { store.send(.openSettings(.logs)) }
     @objc private func quit() { NSApp.terminate(nil) }
 
     // MARK: Indicator drawing
 
+    /// A small lit sphere in the state's color, the still twin of the
+    /// animated orb in the window. The menu bar stays still to spare the battery.
     static func indicatorImage(for color: StatusColor) -> NSImage {
-        let size = NSSize(width: 14, height: 14)
+        let size = NSSize(width: 16, height: 16)
         let image = NSImage(size: size, flipped: false) { rect in
-            let path = NSBezierPath(ovalIn: rect.insetBy(dx: 2, dy: 2))
-            nsColor(for: color).setFill()
-            path.fill()
-            NSColor.black.withAlphaComponent(0.15).setStroke()
-            path.lineWidth = 1
+            let ball = rect.insetBy(dx: 2.5, dy: 2.5)
+            let path = NSBezierPath(ovalIn: ball)
+            let base = nsColor(for: color)
+            let gradient = NSGradient(colors: [base.blended(withFraction: 0.55, of: .white) ?? base, base, base.blended(withFraction: 0.35, of: .black) ?? base])
+            gradient?.draw(in: path, relativeCenterPosition: NSPoint(x: -0.35, y: 0.4))
+            NSColor.black.withAlphaComponent(0.2).setStroke()
+            path.lineWidth = 0.75
             path.stroke()
             return true
         }
