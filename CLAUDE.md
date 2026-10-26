@@ -2,7 +2,7 @@
 
 Menu-bar app for macOS. It keeps one SSH session to a Keenetic router, polls `skeen status`, reads sing-box's Clash API, and shows whether sing-box is running. The app has no Dock icon (`LSUIElement`) and starts in the menu bar only.
 
-User-facing copy is Russian. Code, types, and comments are English. The README exists in English (`README.md`) and Russian (`README.RU.md`); change both together.
+User-facing copy is written in English in code and translated to Russian in `SkeenStatus/Localizable.xcstrings`. Every new user-facing string goes through `String(localized:)` or a SwiftUI literal and gets its Russian line in the catalog. Code, types, and comments are English. The language follows macOS or the app’s own `AppleLanguages` (General → Language); tests run in English through the test plan. The README exists in English (`README.md`, screenshots in `media/`) and Russian (`README.RU.md`, screenshots in `media/ru/`); change both together.
 
 ## Build and test
 
