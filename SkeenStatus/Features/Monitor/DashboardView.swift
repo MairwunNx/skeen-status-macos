@@ -239,7 +239,7 @@ struct DashboardView<Accessory: View>: View {
         let hovered = sample(near: availabilityHover)
         return ChartCard(
             title: "Доступность",
-            detail: "Красным и жёлтым отмечено, когда sing-box не работал",
+            detail: "Когда sing-box работал",
             legend: [("работает", .green), ("остановлен", .red), ("нет связи", .yellow)]
         ) {
             Chart {
@@ -270,7 +270,8 @@ struct DashboardView<Accessory: View>: View {
         return samples.indices.map { index in
             let start = samples[index].date
             let end = index + 1 < samples.count ? samples[index + 1].date : start.addingTimeInterval(15)
-            return PhaseSpan(start: start, end: min(end, start.addingTimeInterval(3_600)), phase: samples[index].phase)
+            // A second of overlap hides hairline seams between neighbors.
+            return PhaseSpan(start: start, end: min(end, start.addingTimeInterval(3_600)).addingTimeInterval(1), phase: samples[index].phase)
         }
     }
 
@@ -388,6 +389,7 @@ private struct ChartCard<Content: View>: View {
                             RoundedRectangle(cornerRadius: 2).fill(item.1).frame(width: 9, height: 9)
                             Text(item.0).font(.caption).foregroundStyle(.secondary)
                         }
+                        .fixedSize()
                     }
                 }
             }
