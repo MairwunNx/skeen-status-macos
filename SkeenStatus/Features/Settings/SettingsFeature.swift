@@ -15,6 +15,16 @@ struct SettingsFeature {
         var test: TestStatus?
         var loginItemEnabled = false
         var saveError: String?
+        /// The passphrase sheet for moving settings to another Mac.
+        var transfer: TransferMode?
+        var passphrase = ""
+        var passphraseConfirmation = ""
+        var transferError: String?
+        var isTransferring = false
+        var transferNotice: String?
+        /// A sealed file waiting for the save panel.
+        var exportData: Data?
+        var isPickingImport = false
         @Presents var alert: AlertState<Action.Alert>?
 
         var hasChanges: Bool {
@@ -22,6 +32,12 @@ struct SettingsFeature {
             current.hostKey = draft.hostKey
             return draft != current || password != savedPassword || clashSecret != savedClashSecret
         }
+    }
+
+    enum TransferMode: Equatable {
+        case export
+        /// The picked file, waiting for its passphrase.
+        case `import`(Data)
     }
 
     enum TestStatus: Equatable {
@@ -40,6 +56,14 @@ struct SettingsFeature {
         case testFinished(Result<String, Error>)
         case forgetHostKeyTapped
         case openAppLogTapped
+        case exportTapped
+        case importTapped
+        case importPicked(Result<URL, Error>)
+        case transferConfirmed
+        case transferCancelled
+        case sealed(Result<Data, Error>)
+        case opened(Result<SettingsBundle, Error>)
+        case exportSaved(Result<URL, Error>)
         case alert(PresentationAction<Alert>)
         case delegate(Delegate)
 
@@ -56,6 +80,7 @@ struct SettingsFeature {
     }
 
     @Dependency(\.appLog) var appLog
+    @Dependency(\.date.now) var now
     @Dependency(\.keychain) var keychain
     @Dependency(\.loginItem) var loginItem
     @Dependency(\.openURL) var openURL
@@ -158,6 +183,108 @@ struct SettingsFeature {
             case .openAppLogTapped:
                 let url = appLog.url()
                 return .run { _ in await openURL(url) }
+
+            case .exportTapped:
+                state.transfer = .export
+                state.passphrase = ""
+                state.passphraseConfirmation = ""
+                state.transferError = nil
+                state.transferNotice = nil
+                return .none
+
+            case .importTapped:
+                state.transferNotice = nil
+                state.isPickingImport = true
+                return .none
+
+            case .importPicked(.success(let url)):
+                state.isPickingImport = false
+                guard let data = try? Data(contentsOf: url) else {
+                    state.transferNotice = "Не удалось прочитать файл"
+                    return .none
+                }
+                state.transfer = .import(data)
+                state.passphrase = ""
+                state.transferError = nil
+                return .none
+
+            case .importPicked(.failure):
+                state.isPickingImport = false
+                return .none
+
+            case .transferConfirmed:
+                guard let mode = state.transfer, !state.isTransferring else { return .none }
+                let passphrase = state.passphrase
+                switch mode {
+                case .export:
+                    guard passphrase.count >= SettingsTransfer.minimumPassphraseLength else {
+                        state.transferError = SettingsTransferError.weakPassphrase.localizedDescription
+                        return .none
+                    }
+                    guard passphrase == state.passphraseConfirmation else {
+                        state.transferError = "Коды не совпадают"
+                        return .none
+                    }
+                    state.isTransferring = true
+                    let bundle = SettingsBundle(
+                        config: state.config,
+                        password: keychain.read(state.config.login) ?? "",
+                        clashSecret: keychain.read(Config.clashSecretAccount) ?? "",
+                        exportedAt: now
+                    )
+                    return .run { send in
+                        await send(.sealed(attempt { try SettingsTransfer.seal(bundle, passphrase: passphrase) }))
+                    }
+                case .import(let data):
+                    state.isTransferring = true
+                    return .run { send in
+                        await send(.opened(attempt { try SettingsTransfer.open(data, passphrase: passphrase) }))
+                    }
+                }
+
+            case .transferCancelled:
+                state.transfer = nil
+                state.passphrase = ""
+                state.passphraseConfirmation = ""
+                state.isTransferring = false
+                return .none
+
+            case .sealed(let result):
+                state.isTransferring = false
+                switch result {
+                case .success(let data):
+                    state.transfer = nil
+                    state.passphrase = ""
+                    state.passphraseConfirmation = ""
+                    state.exportData = data
+                case .failure(let error):
+                    state.transferError = error.localizedDescription
+                }
+                return .none
+
+            case .opened(.success(let bundle)):
+                state.isTransferring = false
+                state.transfer = nil
+                state.passphrase = ""
+                state.$config.withLock { $0 = bundle.config }
+                keychain.save(bundle.password, bundle.config.login)
+                keychain.save(bundle.clashSecret, Config.clashSecretAccount)
+                state.transferNotice = "Настройки перенесены: роутер \(bundle.config.gateway)"
+                appLog.write("settings imported for \(bundle.config.gateway)")
+                return .merge(.send(.onAppear), .send(.delegate(.saved)))
+
+            case .opened(.failure(let error)):
+                state.isTransferring = false
+                state.transferError = error.localizedDescription
+                return .none
+
+            case .exportSaved(let result):
+                state.exportData = nil
+                if case .success(let url) = result {
+                    state.transferNotice = "Сохранено в «\(url.lastPathComponent)». Код передайте отдельно от файла."
+                    appLog.write("settings exported")
+                }
+                return .none
 
             case .alert, .delegate:
                 return .none

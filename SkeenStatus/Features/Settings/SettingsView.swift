@@ -1,5 +1,6 @@
 import ComposableArchitecture
 import SwiftUI
+import UniformTypeIdentifiers
 
 /// SSH, status detection, polling, and the Clash API.
 struct ConnectionSettingsView: View {
@@ -222,6 +223,25 @@ struct GeneralSettingsView: View {
                         .foregroundStyle(.secondary)
                 }
             }
+            SectionCard(title: "Перенос на другой Mac", systemImage: "arrow.left.arrow.right") {
+                Text("Файл с настройками, паролем SSH, секретом Clash API и ключом роутера, зашифрованный вашим кодом: AES-256-GCM, ключ из кода через PBKDF2-SHA256. Без кода файл бесполезен, поэтому передавайте код отдельно.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                HStack {
+                    Button("Экспортировать…") { store.send(.exportTapped) }
+                        .glassButton(prominent: false, reduceTransparency: reduceTransparency)
+                        .accessibilityIdentifier("settings.export")
+                    Button("Импортировать…") { store.send(.importTapped) }
+                        .glassButton(prominent: false, reduceTransparency: reduceTransparency)
+                        .accessibilityIdentifier("settings.import")
+                    if let notice = store.transferNotice {
+                        Label(notice, systemImage: "checkmark.circle.fill")
+                            .font(.callout)
+                            .foregroundStyle(.green)
+                            .lineLimit(2)
+                    }
+                }
+            }
             SectionCard(title: "Диагностика", systemImage: "stethoscope") {
                 HStack {
                     Text("Журнал приложения: подключения, смены состояния, сценарии.")
@@ -244,6 +264,69 @@ struct GeneralSettingsView: View {
     }
 }
 
+/// Asks for the passphrase that seals or opens a settings file.
+private struct PassphraseSheet: View {
+    @Bindable var store: StoreOf<SettingsFeature>
+
+    private var isExport: Bool { store.transfer == .export }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            Text(isExport ? "Код для файла настроек" : "Код от файла настроек")
+                .font(.title3.weight(.semibold))
+            Text(isExport
+                 ? "Придумайте код не короче \(SettingsTransfer.minimumPassphraseLength) символов. Он понадобится на другом Mac, восстановить его нельзя."
+                 : "Введите код, которым файл зашифровали. Текущие настройки заменятся настройками из файла.")
+                .font(.callout)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+            SecureField("Код", text: $store.passphrase)
+                .textFieldStyle(.roundedBorder)
+                .onSubmit { store.send(.transferConfirmed) }
+            if isExport {
+                SecureField("Ещё раз", text: $store.passphraseConfirmation)
+                    .textFieldStyle(.roundedBorder)
+                    .onSubmit { store.send(.transferConfirmed) }
+            }
+            if let error = store.transferError {
+                Label(error, systemImage: "xmark.circle.fill")
+                    .font(.callout)
+                    .foregroundStyle(.red)
+            }
+            HStack {
+                if store.isTransferring {
+                    ProgressView().controlSize(.small)
+                }
+                Spacer()
+                Button("Отмена", role: .cancel) { store.send(.transferCancelled) }
+                    .keyboardShortcut(.cancelAction)
+                Button(isExport ? "Зашифровать" : "Расшифровать") { store.send(.transferConfirmed) }
+                    .keyboardShortcut(.defaultAction)
+                    .buttonStyle(.glassProminent)
+                    .disabled(store.passphrase.isEmpty || store.isTransferring)
+            }
+        }
+        .padding(22)
+        .frame(width: 420)
+    }
+}
+
+/// The sealed bytes, handed to the save panel as they are.
+private struct SettingsFile: FileDocument {
+    static let readableContentTypes: [UTType] = [.data]
+    let data: Data
+
+    init(data: Data) { self.data = data }
+
+    init(configuration: ReadConfiguration) throws {
+        data = configuration.file.regularFileContents ?? Data()
+    }
+
+    func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
+        FileWrapper(regularFileWithContents: data)
+    }
+}
+
 /// A scrolling settings page with the save bar pinned under it.
 private struct SettingsPage<Content: View>: View {
     @Bindable var store: StoreOf<SettingsFeature>
@@ -263,6 +346,26 @@ private struct SettingsPage<Content: View>: View {
             }
         }
         .alert($store.scope(state: \.alert, action: \.alert))
+        .sheet(isPresented: Binding(
+            get: { store.transfer != nil },
+            set: { if !$0 { store.send(.transferCancelled) } }
+        )) {
+            PassphraseSheet(store: store)
+        }
+        .fileExporter(
+            isPresented: Binding(get: { store.exportData != nil }, set: { if !$0 { store.send(.exportSaved(.failure(CancellationError()))) } }),
+            document: store.exportData.map(SettingsFile.init(data:)),
+            contentType: .data,
+            defaultFilename: "Skeen Status.skeensettings"
+        ) { result in
+            store.send(.exportSaved(result))
+        }
+        .fileImporter(
+            isPresented: Binding(get: { store.isPickingImport }, set: { if !$0 && store.isPickingImport { store.send(.importPicked(.failure(CancellationError()))) } }),
+            allowedContentTypes: [.data]
+        ) { result in
+            store.send(.importPicked(result))
+        }
     }
 
     private var saveBar: some View {
