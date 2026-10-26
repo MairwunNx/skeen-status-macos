@@ -57,6 +57,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         }
     }
 
+    /// Opening the app again from Finder or Spotlight shows the window.
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        store?.send(.openSettings(nil))
+        return false
+    }
+
+    func applicationSupportsSecureRestorableState(_ app: NSApplication) -> Bool {
+        true
+    }
+
     @objc private func systemDidWake() {
         store.send(.systemDidWake)
     }
@@ -79,6 +89,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         window.toolbarStyle = .unified
         window.setContentSize(NSSize(width: 1080, height: 760))
         window.isReleasedWhenClosed = false
+        // Never bring the window back on login: the app starts in the menu bar.
+        window.isRestorable = false
         window.delegate = self
         // The demo keeps one size so screenshots match from run to run.
         if DemoMode.isOn {
