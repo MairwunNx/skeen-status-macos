@@ -1,18 +1,16 @@
 import AppKit
+import ComposableArchitecture
 
-/// Owns the NSStatusItem: draws the colored indicator and builds the dropdown
-/// menu on demand from the shared AppState.
+/// Owns the NSStatusItem: draws the colored dot and rebuilds the dropdown
+/// from the store each time it opens.
 @MainActor
 final class StatusItemController: NSObject, NSMenuDelegate {
     private let statusItem: NSStatusItem
-    private let appState: AppState
-    private let engine: Engine
+    private let store: StoreOf<AppFeature>
+    private var observation: ObserveToken?
 
-    var onOpenSettings: (() -> Void)?
-
-    init(appState: AppState, engine: Engine) {
-        self.appState = appState
-        self.engine = engine
+    init(store: StoreOf<AppFeature>) {
+        self.store = store
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
         super.init()
 
@@ -20,67 +18,73 @@ final class StatusItemController: NSObject, NSMenuDelegate {
         menu.delegate = self
         statusItem.menu = menu
         statusItem.button?.setAccessibilityIdentifier("skeen.statusItem")
-        update(state: appState.status)
-    }
 
-    func update(state: SkeenState) {
-        statusItem.button?.image = Self.indicatorImage(for: statusColor(for: state))
-        statusItem.button?.toolTip = "Skeen: \(state.keyword)"
+        observation = observe { [weak self] in
+            guard let self else { return }
+            let state = self.store.monitor.snapshot.state
+            self.statusItem.button?.image = Self.indicatorImage(for: statusColor(for: state))
+            self.statusItem.button?.toolTip = "skeen \(state.title)"
+        }
     }
 
     // MARK: Menu
 
     func menuNeedsUpdate(_ menu: NSMenu) {
-        rebuild(menu)
-    }
-
-    private func rebuild(_ menu: NSMenu) {
         menu.removeAllItems()
 
         let model = menuModel(
-            state: appState.status,
-            lastCheck: appState.lastCheck,
-            gateway: appState.config.gateway,
-            now: Date()
+            snapshot: store.monitor.snapshot,
+            singBox: store.monitor.singBox,
+            gateway: store.monitor.config.gateway
         )
 
-        menu.addItem(header(model.title, color: statusColor(for: appState.status)))
-        menu.addItem(.separator())
-        menu.addItem(disabled(model.statusDetail))
-        if let memory = model.memoryLine {
-            menu.addItem(disabled(memory))
+        menu.addItem(header(model.title, color: model.color))
+        for line in [model.processLine, model.runtimeLine, model.routeLine].compactMap({ $0 }) {
+            menu.addItem(info(line))
         }
-        menu.addItem(disabled(model.lastCheckLine))
-        menu.addItem(disabled(model.routerLine))
-        menu.addItem(.separator())
+        if let error = model.errorLine {
+            let item = info(error)
+            item.image = NSImage(systemSymbolName: "exclamationmark.triangle.fill", accessibilityDescription: nil)
+            menu.addItem(item)
+        }
+        menu.addItem(info(model.lastCheckLine))
+        menu.addItem(info(model.routerLine))
 
-        menu.addItem(action("Проверить сейчас", #selector(checkNow)))
-        menu.addItem(action("Настройки…", #selector(openSettings)))
         menu.addItem(.separator())
-        menu.addItem(action("Выход", #selector(quit)))
+        if model.canStart {
+            menu.addItem(action("Запустить skeen", #selector(startService)))
+        }
+        menu.addItem(action("Проверить сейчас", #selector(checkNow), key: "r"))
+        menu.addItem(action("Лог sing-box…", #selector(openLogs)))
+        menu.addItem(action("Настройки…", #selector(openSettings), key: ","))
+        menu.addItem(.separator())
+        menu.addItem(action("Выйти", #selector(quit), key: "q"))
     }
 
     private func header(_ title: String, color: StatusColor) -> NSMenuItem {
         let item = NSMenuItem(title: title, action: nil, keyEquivalent: "")
         item.image = Self.indicatorImage(for: color)
+        item.attributedTitle = NSAttributedString(string: title, attributes: [.font: NSFont.menuFont(ofSize: 0).bold])
         item.isEnabled = false
         return item
     }
 
-    private func disabled(_ title: String) -> NSMenuItem {
+    private func info(_ title: String) -> NSMenuItem {
         let item = NSMenuItem(title: title, action: nil, keyEquivalent: "")
         item.isEnabled = false
         return item
     }
 
-    private func action(_ title: String, _ selector: Selector) -> NSMenuItem {
-        let item = NSMenuItem(title: title, action: selector, keyEquivalent: "")
+    private func action(_ title: String, _ selector: Selector, key: String = "") -> NSMenuItem {
+        let item = NSMenuItem(title: title, action: selector, keyEquivalent: key)
         item.target = self
         return item
     }
 
-    @objc private func checkNow() { engine.checkNow() }
-    @objc private func openSettings() { onOpenSettings?() }
+    @objc private func checkNow() { store.send(.monitor(.checkNow)) }
+    @objc private func startService() { store.send(.service(.run(.start))) }
+    @objc private func openSettings() { store.send(.openSettings(nil)) }
+    @objc private func openLogs() { store.send(.openSettings(.logs)) }
     @objc private func quit() { NSApp.terminate(nil) }
 
     // MARK: Indicator drawing
@@ -88,8 +92,7 @@ final class StatusItemController: NSObject, NSMenuDelegate {
     static func indicatorImage(for color: StatusColor) -> NSImage {
         let size = NSSize(width: 14, height: 14)
         let image = NSImage(size: size, flipped: false) { rect in
-            let inset = rect.insetBy(dx: 2, dy: 2)
-            let path = NSBezierPath(ovalIn: inset)
+            let path = NSBezierPath(ovalIn: rect.insetBy(dx: 2, dy: 2))
             nsColor(for: color).setFill()
             path.fill()
             NSColor.black.withAlphaComponent(0.15).setStroke()
@@ -98,6 +101,7 @@ final class StatusItemController: NSObject, NSMenuDelegate {
             return true
         }
         image.isTemplate = false
+        image.accessibilityDescription = "skeen"
         return image
     }
 
@@ -108,5 +112,11 @@ final class StatusItemController: NSObject, NSMenuDelegate {
         case .yellow: return .systemYellow
         case .gray: return .systemGray
         }
+    }
+}
+
+private extension NSFont {
+    var bold: NSFont {
+        NSFontManager.shared.convert(self, toHaveTrait: .boldFontMask)
     }
 }

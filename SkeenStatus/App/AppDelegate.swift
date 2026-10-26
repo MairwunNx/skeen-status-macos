@@ -1,49 +1,94 @@
 import AppKit
+import ComposableArchitecture
 import SwiftUI
 
 @MainActor
-final class AppDelegate: NSObject, NSApplicationDelegate {
-    private var appState: AppState!
-    private var engine: Engine!
+final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
+    private var store: StoreOf<AppFeature>!
     private var statusController: StatusItemController!
     private var settingsWindow: NSWindow?
+    private var observations: [ObserveToken] = []
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        let config = ConfigStore.load()
-        appState = AppState(config: config)
-        engine = Engine(appState: appState)
+        // As the host of unit tests the app stays idle: test dependencies
+        // would report every live call as unimplemented.
+        guard !isTesting else { return }
 
-        statusController = StatusItemController(appState: appState, engine: engine)
-        statusController.onOpenSettings = { [weak self] in self?.openSettings() }
-        engine.onStateChange = { [weak self] state in self?.statusController.update(state: state) }
+        // Shared state loads through dependencies, so the demo must be in
+        // place before the state exists, not only inside the store.
+        var initialState = withDependencies {
+            if DemoMode.isOn { DemoMode.apply(to: &$0) }
+        } operation: {
+            AppFeature.State()
+        }
+        if DemoMode.isOn {
+            initialState.monitor.history = DemoMode.history(until: Date())
+        }
+        store = Store(initialState: initialState) {
+            AppFeature()
+        } withDependencies: {
+            if DemoMode.isOn { DemoMode.apply(to: &$0) }
+        }
+        statusController = StatusItemController(store: store)
 
-        AppLog.shared.log("app launched")
-        engine.start()
+        var lastRequest = store.settingsRequest
+        observations.append(observe { [weak self] in
+            guard let self else { return }
+            let request = self.store.settingsRequest
+            guard request != lastRequest else { return }
+            lastRequest = request
+            self.showSettings()
+        })
+
+        NSWorkspace.shared.notificationCenter.addObserver(
+            self,
+            selector: #selector(systemDidWake),
+            name: NSWorkspace.didWakeNotification,
+            object: nil
+        )
+
+        store.send(.launched)
+        if ProcessInfo.processInfo.arguments.contains("--open-settings") {
+            store.send(.openSettings(nil))
+        }
     }
 
-    func applicationWillTerminate(_ notification: Notification) {
-        AppLog.shared.log("app terminating")
+    @objc private func systemDidWake() {
+        store.send(.systemDidWake)
     }
 
-    private func openSettings() {
+    // MARK: Settings window
+
+    /// The window is built on each open and torn down on close, so the logs
+    /// tab stops polling the router the moment it is out of sight.
+    private func showSettings() {
         if let settingsWindow {
             settingsWindow.makeKeyAndOrderFront(nil)
-            NSApp.activate(ignoringOtherApps: true)
+            NSApp.activate()
             return
         }
 
-        let view = SettingsView(appState: appState, engine: engine)
-        let hosting = NSHostingController(rootView: view)
+        let hosting = NSHostingController(rootView: SettingsRootView(store: store))
         let window = NSWindow(contentViewController: hosting)
         window.title = "Skeen Status"
-        window.styleMask = [.titled, .closable, .miniaturizable, .resizable]
-        window.setContentSize(NSSize(width: 720, height: 640))
-        window.minSize = NSSize(width: 560, height: 520)
+        window.styleMask = [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView]
+        window.toolbarStyle = .unified
+        window.setContentSize(NSSize(width: 1080, height: 760))
         window.isReleasedWhenClosed = false
-        window.center()
+        window.delegate = self
+        window.setFrameAutosaveName("SkeenStatusSettings")
+        if !window.setFrameUsingName("SkeenStatusSettings") {
+            window.center()
+        }
         settingsWindow = window
 
         window.makeKeyAndOrderFront(nil)
-        NSApp.activate(ignoringOtherApps: true)
+        NSApp.activate()
+    }
+
+    func windowWillClose(_ notification: Notification) {
+        guard let window = notification.object as? NSWindow, window == settingsWindow else { return }
+        window.contentViewController = nil
+        settingsWindow = nil
     }
 }
