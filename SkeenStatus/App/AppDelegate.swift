@@ -48,7 +48,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         )
 
         store.send(.launched)
-        if ProcessInfo.processInfo.arguments.contains("--open-settings") {
+        let arguments = ProcessInfo.processInfo.arguments
+        if let index = arguments.firstIndex(of: "--tab"), index + 1 < arguments.count,
+           let tab = SettingsTab(rawValue: arguments[index + 1]) {
+            store.send(.openSettings(tab))
+        } else if arguments.contains("--open-settings") {
             store.send(.openSettings(nil))
         }
     }
@@ -76,9 +80,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         window.setContentSize(NSSize(width: 1080, height: 760))
         window.isReleasedWhenClosed = false
         window.delegate = self
-        window.setFrameAutosaveName("SkeenStatusSettings")
-        if !window.setFrameUsingName("SkeenStatusSettings") {
+        // The demo keeps one size so screenshots match from run to run.
+        if DemoMode.isOn {
+            window.setContentSize(NSSize(width: 1120, height: 1060))
             window.center()
+        } else {
+            window.setFrameAutosaveName("SkeenStatusSettings")
+            if !window.setFrameUsingName("SkeenStatusSettings") {
+                window.center()
+            }
         }
         settingsWindow = window
 

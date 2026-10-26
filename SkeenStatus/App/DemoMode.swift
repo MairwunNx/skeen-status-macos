@@ -61,7 +61,7 @@ enum DemoMode {
             return MetricSample(
                 date: date,
                 phase: (offset > 1500 && offset < 1590) || (offset > 52_000 && offset < 52_300) ? .stopped : .running,
-                memoryMB: offset > 3_600 ? 54 + Int(4 * sin(t / 21_600)) : 52 + Int(6 * sin(t / 600)),
+                memoryMB: 56 + Int((4 * sin(t / 5_400) + 2 * sin(t / 900)).rounded()),
                 connections: offset > 3_600 ? 30 + Int(18 * max(0, sin(t / 13_750))) : demoConnections(t),
                 downloadRate: offset > 3_600 ? 400_000 + 1_800_000 * max(0, sin(t / 13_750)) : demoDownload(t),
                 uploadRate: offset > 3_600 ? 60_000 + 220_000 * max(0, sin(t / 13_750 + 0.3)) : demoUpload(t)
@@ -110,7 +110,7 @@ enum DemoMode {
     Статус: \u{1B}[32mrunning\u{1B}[0m
     PID: 4127
     Время работы: 6d 3h 12m
-    Память: 58 MB (пиковая: 71 MB)
+    Память: 57 MB (пиковая: 71 MB)
     Потоки: 11
     """
 
