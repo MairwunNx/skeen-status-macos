@@ -1,5 +1,6 @@
 import XCTest
 
+/// Drives the app in `--demo` mode: a made-up router, no network, no Keychain.
 final class SkeenStatusUITests: XCTestCase {
 
     override func setUpWithError() throws {
@@ -7,8 +8,9 @@ final class SkeenStatusUITests: XCTestCase {
     }
 
     @MainActor
-    private func launchedApp() -> XCUIApplication {
+    private func launchedApp(_ extra: [String] = []) -> XCUIApplication {
         let app = XCUIApplication()
+        app.launchArguments = ["--demo"] + extra
         app.launch()
         return app
     }
@@ -29,7 +31,7 @@ final class SkeenStatusUITests: XCTestCase {
 
         XCTAssertTrue(app.menuItems["Проверить сейчас"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.menuItems["Настройки…"].exists)
-        XCTAssertTrue(app.menuItems["Выход"].exists)
+        XCTAssertTrue(app.menuItems["Выйти"].exists)
     }
 
     @MainActor
@@ -41,27 +43,24 @@ final class SkeenStatusUITests: XCTestCase {
         XCTAssertTrue(settings.waitForExistence(timeout: 5))
         settings.click()
 
-        let window = app.windows["Skeen Status"]
+        let window = app.windows.firstMatch
         XCTAssertTrue(window.waitForExistence(timeout: 5))
-        XCTAssertTrue(window.buttons["settings.save"].exists)
-        XCTAssertTrue(window.buttons["Проверить связь"].exists)
-        XCTAssertTrue(window.staticTexts["Skeen Status"].exists)
+        XCTAssertTrue(window.buttons["overview.checkNow"].waitForExistence(timeout: 5))
     }
 
     @MainActor
-    func testGatewayFieldIsEditable() throws {
-        let app = launchedApp()
-        try statusItem(in: app).click()
-        app.menuItems["Настройки…"].click()
-
-        let window = app.windows["Skeen Status"]
+    func testEditingTheGatewayOffersToSave() throws {
+        let app = launchedApp(["--open-settings"])
+        let window = app.windows.firstMatch
         XCTAssertTrue(window.waitForExistence(timeout: 5))
 
+        window.outlines.staticTexts["Подключение"].click()
         let gateway = window.textFields["settings.gateway"]
         XCTAssertTrue(gateway.waitForExistence(timeout: 5))
         gateway.click()
         gateway.typeKey("a", modifierFlags: .command)
         gateway.typeText("10.0.0.1")
         XCTAssertEqual(gateway.value as? String, "10.0.0.1")
+        XCTAssertTrue(window.buttons["settings.save"].waitForExistence(timeout: 5))
     }
 }

@@ -49,12 +49,19 @@ struct SkeenCommandTests {
         #expect(SkeenControl.stop.rawValue == "stop")
         #expect(SkeenControl.restart.rawValue == "restart")
         #expect(SkeenControl.reload.rawValue == "reload")
+        #expect(SkeenControl.check.rawValue == "check")
     }
 
-    @Test func onlyRestartAndReloadAreDisruptive() {
+    @Test func everythingThatCutsTrafficIsDisruptive() {
         #expect(SkeenControl.start.isDisruptive == false)
-        #expect(SkeenControl.stop.isDisruptive == false)
+        #expect(SkeenControl.check.isDisruptive == false)
+        #expect(SkeenControl.stop.isDisruptive)
         #expect(SkeenControl.restart.isDisruptive)
         #expect(SkeenControl.reload.isDisruptive)
+    }
+
+    @Test func onlyCheckLeavesTheStateAlone() {
+        #expect(SkeenControl.check.changesState == false)
+        #expect(SkeenControl.allCases.filter(\.changesState) == [.start, .stop, .restart, .reload])
     }
 }

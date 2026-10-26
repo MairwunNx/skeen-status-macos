@@ -69,6 +69,6 @@ struct CommandMarkerTests {
         let inner = extractBetween(from: buffer, begin: begin, end: end)
         let cleaned = cleanOutput(inner ?? "")
         let state = parseStatus(cleaned, detection: .automatic, rule: RunningRule(pattern: "Status: running", mode: .substring))
-        #expect(state == .running(pid: 19324, memoryMB: 115))
+        #expect(state == .running(SkeenProcess(pid: 19324, memoryMB: 115)))
     }
 }

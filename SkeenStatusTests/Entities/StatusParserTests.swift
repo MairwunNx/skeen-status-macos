@@ -17,7 +17,7 @@ struct StatusParserTests {
 
     @Test func runningOutputParsesPidAndMemory() {
         let state = parseStatus(runningSample, detection: .rule, rule: substring("Status: running"))
-        #expect(state == .running(pid: 5733, memoryMB: 117))
+        #expect(state == .running(SkeenProcess(pid: 5733, memoryMB: 117)))
     }
 
     @Test func stoppedOutputIsStopped() {
@@ -30,7 +30,7 @@ struct StatusParserTests {
 
     @Test func runningWithoutDetailsHasNilFields() {
         let state = parseStatus("Status: running", detection: .rule, rule: substring("Status: running"))
-        #expect(state == .running(pid: nil, memoryMB: nil))
+        #expect(state == .running(SkeenProcess()))
     }
 
     @Test func emptyPatternNeverMatches() {
@@ -40,7 +40,7 @@ struct StatusParserTests {
     @Test func regexRuleMatches() {
         let rule = RunningRule(pattern: #"Status:\s+running"#, mode: .regex)
         let state = parseStatus("Status:    running\nPID: 42", detection: .rule, rule: rule)
-        #expect(state == .running(pid: 42, memoryMB: nil))
+        #expect(state == .running(SkeenProcess(pid: 42)))
     }
 
     @Test func invalidRegexDoesNotCrash() {
@@ -53,7 +53,7 @@ struct StatusParserTests {
 
     @Test func automaticReadsLocalizedColoredOutput() {
         let state = parseStatus(russianRunning, detection: .automatic, rule: substring("Status: running"))
-        #expect(state == .running(pid: 16460, memoryMB: 63))
+        #expect(state == .running(SkeenProcess(pid: 16460, memoryMB: 63, uptime: "18d 8h 51m")))
     }
 
     @Test func automaticReadsStopped() {
@@ -62,7 +62,7 @@ struct StatusParserTests {
     }
 
     @Test func automaticTreatsPidLineAsRunning() {
-        #expect(parseStatus("PID: 7", detection: .automatic, rule: substring("")) == .running(pid: 7, memoryMB: nil))
+        #expect(parseStatus("PID: 7", detection: .automatic, rule: substring("")) == .running(SkeenProcess(pid: 7)))
     }
 
     @Test func automaticLeavesUnrecognizedOutputUnknown() {
@@ -76,6 +76,12 @@ struct StatusParserTests {
     @Test func pidParsedRegardlessOfMarkerPosition() {
         #expect(parseFirstInt("PID: 19324", key: "PID") == 19324)
         #expect(parseFirstInt("no pid here", key: "PID") == nil)
+    }
+
+    @Test func uptimeParsedInBothLanguages() {
+        #expect(parseUptime("Uptime: 2d 3h 4m\nThreads: 9") == "2d 3h 4m")
+        #expect(parseUptime("Время работы: 18d 8h 51m") == "18d 8h 51m")
+        #expect(parseUptime("PID: 4") == nil)
     }
 
     @Test func memoryParsedFromMBLine() {

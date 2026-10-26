@@ -58,5 +58,27 @@ struct ConfigTests {
         #expect(connection.host == config.gateway)
         #expect(connection.port == config.port)
         #expect(connection.username == config.login)
+        #expect(connection.trustedHostKey == nil)
+    }
+
+    @Test func pinnedHostKeyGoesToTheSession() {
+        var config = Config.default
+        config.hostKey = "ssh-ed25519 AAAA"
+        #expect(config.sshConnection(password: "").trustedHostKey == "ssh-ed25519 AAAA")
+    }
+
+    @Test func newFieldsDefaultWhenMissing() throws {
+        let config = try JSONDecoder().decode(Config.self, from: Data(#"{"gateway":"10.0.0.1"}"#.utf8))
+        #expect(config.hostKey == "")
+        #expect(config.clashAPIEnabled)
+        #expect(config.clashAPIURL == "")
+        #expect(config.notificationsEnabled)
+        #expect(config.notifyUnreachable)
+    }
+
+    @Test func pollIntervalIsClampedToThreeSeconds() {
+        var config = Config.default
+        config.intervalSeconds = 1
+        #expect(config.pollInterval == .seconds(3))
     }
 }
