@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		0A5B835D2FE9420100CA00DC /* Citadel in Frameworks */ = {isa = PBXBuildFile; productRef = 0A5B835C2FE9420100CA00DC /* Citadel */; };
-		0A5B83652FE9426700CA00DC /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 0A5B83642FE9426400CA00DC /* .gitignore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -239,7 +238,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A5B83652FE9426700CA00DC /* .gitignore in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
