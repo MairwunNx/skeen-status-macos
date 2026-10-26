@@ -47,7 +47,7 @@ struct DashboardView<Accessory: View>: View {
 
     private var header: some View {
         HStack(alignment: .center, spacing: 14) {
-            StatusDot(color: statusColor(for: store.snapshot.state), size: 18)
+            StatusDot(color: statusColor(for: store.snapshot.state), size: 44)
             VStack(alignment: .leading, spacing: 2) {
                 Text("skeen \(store.snapshot.state.title)")
                     .font(.title.weight(.semibold))

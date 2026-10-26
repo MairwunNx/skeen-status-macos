@@ -59,7 +59,7 @@ struct SettingsRootView: View {
 
     private var sidebarFooter: some View {
         HStack(spacing: 8) {
-            StatusDot(color: statusColor(for: store.monitor.snapshot.state), size: 10)
+            StatusDot(color: statusColor(for: store.monitor.snapshot.state), size: 16)
             VStack(alignment: .leading, spacing: 0) {
                 Text("skeen \(store.monitor.snapshot.state.title)")
                     .font(.callout)
