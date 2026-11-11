@@ -275,7 +275,7 @@ struct DashboardView<Accessory: View>: View {
         }
     }
 
-    /// A vertical line at the hovered sample with a glass tooltip above it.
+    /// A vertical line at the hovered sample with a tooltip above it.
     private func hoverRule(_ sample: MetricSample, lines: [(String, String, Color)]) -> some ChartContent {
         RuleMark(x: .value("Time", sample.date))
             .foregroundStyle(.secondary.opacity(0.5))
@@ -330,7 +330,17 @@ private struct ChartTooltip: View {
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 7)
-        .glassCard(cornerRadius: 10)
+        // A solid card, not glass: glass inside a chart annotation samples
+        // the plot behind it and smears into garbage.
+        .background {
+            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                .fill(Color(nsColor: .controlBackgroundColor))
+                .shadow(color: .black.opacity(0.12), radius: 8, y: 2)
+        }
+        .overlay {
+            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                .strokeBorder(Color(nsColor: .separatorColor), lineWidth: 0.5)
+        }
     }
 }
 
