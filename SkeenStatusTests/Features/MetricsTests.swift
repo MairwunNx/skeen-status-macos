@@ -63,10 +63,26 @@ struct MetricsTests {
         #expect(merged[0].weight == 5)
     }
 
-    @Test func downsamplingCapsThePointCount() {
+    @Test func bucketWidthSnapsToTheLadder() {
+        #expect(chartBucketWidth(span: 300, maxPoints: 150) == 2)
+        #expect(chartBucketWidth(span: 86_400, maxPoints: 150) == 600)
+        #expect(chartBucketWidth(span: 16 * 86_400, maxPoints: 150) == 10_800)
+        // A growing range keeps the same width, so the buckets stay put.
+        #expect(chartBucketWidth(span: 16 * 86_400 + 600, maxPoints: 150) == 10_800)
+    }
+
+    @Test func bucketsStartAtTheBucketBoundary() {
         let samples = (0..<5_000).map { MetricSample(date: start.addingTimeInterval(Double($0) * 2), phase: .running) }
-        #expect(downsampled(samples, maxPoints: 360).count <= 361)
-        #expect(downsampled(Array(samples.prefix(100)), maxPoints: 360).count == 100)
+        let merged = bucketed(samples, width: 60)
+        #expect(merged.count <= 168)
+        #expect(merged.allSatisfy { $0.date.timeIntervalSince1970.truncatingRemainder(dividingBy: 60) == 0 })
+        #expect(merged.reduce(0) { $0 + $1.weight } == samples.count)
+    }
+
+    @Test func chartLinesBreakAtLongPauses() {
+        let dates: [TimeInterval] = [0, 60, 120, 7_200, 7_260]
+        let points = chartPoints(dates.map { MetricSample(date: start.addingTimeInterval($0), phase: .running) }, maxGap: 150)
+        #expect(points.map(\.segment) == [0, 0, 0, 1, 1])
     }
 
     @Test func availabilityWeighsBuckets() {

@@ -97,16 +97,42 @@ func compact(_ history: [MetricSample], now: Date) -> [MetricSample] {
     return bucketed(old, width: 900) + bucketed(day, width: 60) + recent
 }
 
-/// Thins samples to about `maxPoints` buckets of equal width, for drawing.
-func downsampled(_ samples: [MetricSample], maxPoints: Int) -> [MetricSample] {
-    guard samples.count > maxPoints, let first = samples.first?.date, let last = samples.last?.date else { return samples }
-    let width = max(1, last.timeIntervalSince(first) / Double(maxPoints))
-    return bucketed(samples, width: width)
+/// Bucket widths the charts snap to. A fixed ladder keeps every bucket in
+/// place while new readings arrive, so the line doesn't wobble.
+private let chartBucketWidths: [TimeInterval] = [
+    1, 2, 5, 10, 15, 30, 60, 120, 300, 600, 900, 1_800, 3_600, 7_200, 10_800, 21_600, 43_200, 86_400,
+]
+
+/// The narrowest bucket from the ladder that fits `span` into `maxPoints`.
+func chartBucketWidth(span: TimeInterval, maxPoints: Int) -> TimeInterval {
+    let target = span / Double(max(1, maxPoints))
+    return chartBucketWidths.first { $0 >= target } ?? chartBucketWidths[chartBucketWidths.count - 1]
 }
 
-/// Merges samples that fall into the same `width`-second bucket. Numbers
-/// average by weight; the phase keeps the worst moment, so a short outage
-/// never vanishes from the availability strip.
+/// One point on a chart line. A new `segment` starts after a pause in the
+/// readings, so the line breaks there instead of bridging the gap.
+struct ChartPoint: Identifiable, Equatable {
+    var sample: MetricSample
+    var segment: Int
+
+    var id: Date { sample.date }
+}
+
+/// Splits samples into runs wherever two neighbors are more than `maxGap` apart.
+func chartPoints(_ samples: [MetricSample], maxGap: TimeInterval) -> [ChartPoint] {
+    var segment = 0
+    return samples.indices.map { index in
+        if index > 0, samples[index].date.timeIntervalSince(samples[index - 1].date) > maxGap {
+            segment += 1
+        }
+        return ChartPoint(sample: samples[index], segment: segment)
+    }
+}
+
+/// Merges samples that fall into the same `width`-second bucket and dates
+/// the result at the bucket's start. Numbers average by weight; the phase
+/// keeps the worst moment, so a short outage never vanishes from the
+/// availability strip.
 func bucketed(_ samples: [MetricSample], width: TimeInterval) -> [MetricSample] {
     var groups: [(key: Double, items: [MetricSample])] = []
     for sample in samples {
@@ -118,7 +144,6 @@ func bucketed(_ samples: [MetricSample], width: TimeInterval) -> [MetricSample] 
         }
     }
     return groups.map { group in
-        guard group.items.count > 1 else { return group.items[0] }
         let items = group.items
         return MetricSample(
             date: Date(timeIntervalSince1970: group.key),

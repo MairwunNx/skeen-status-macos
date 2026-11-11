@@ -114,9 +114,24 @@ struct DashboardView<Accessory: View>: View {
         return store.history.filter { $0.date >= start }
     }
 
-    /// What the charts draw: at most about 360 points, however long the range.
+    /// How wide one chart bucket is: about 150 points per range, snapped to
+    /// a fixed ladder so the buckets don't shift with every new reading.
+    private var bucketWidth: TimeInterval {
+        chartBucketWidth(span: xDomain.upperBound.timeIntervalSince(xDomain.lowerBound), maxPoints: 150)
+    }
+
+    /// What the charts draw: the range averaged into buckets.
     private var visibleSamples: [MetricSample] {
-        downsampled(rangeSamples, maxPoints: 360)
+        bucketed(rangeSamples, width: bucketWidth)
+    }
+
+    /// A pause longer than this breaks the lines, e.g. while the Mac sleeps.
+    private var maxGap: TimeInterval {
+        max(bucketWidth * 2.5, Double(store.config.pollInterval.components.seconds) * 3)
+    }
+
+    private var points: [ChartPoint] {
+        chartPoints(visibleSamples, maxGap: maxGap)
     }
 
     private var xDomain: ClosedRange<Date> {
@@ -138,17 +153,18 @@ struct DashboardView<Accessory: View>: View {
         let hovered = sample(near: speedHover)
         return ChartCard(title: "Speed", detail: "Download and upload per second", legend: [(String(localized: "Download"), .blue), (String(localized: "Upload"), .orange)]) {
             Chart {
-                ForEach(visibleSamples) { sample in
+                ForEach(points) { point in
+                    let sample = point.sample
                     if let rate = sample.downloadRate {
-                        AreaMark(x: .value("Time", sample.date), y: .value("Speed", rate), series: .value("Flow", "Download"))
+                        AreaMark(x: .value("Time", sample.date), y: .value("Speed", rate), series: .value("Flow", "Download \(point.segment)"))
                             .foregroundStyle(LinearGradient(colors: [.blue.opacity(0.35), .blue.opacity(0.02)], startPoint: .top, endPoint: .bottom))
                             .interpolationMethod(.monotone)
-                        LineMark(x: .value("Time", sample.date), y: .value("Speed", rate), series: .value("Flow", "Download"))
+                        LineMark(x: .value("Time", sample.date), y: .value("Speed", rate), series: .value("Flow", "Download \(point.segment)"))
                             .foregroundStyle(.blue)
                             .interpolationMethod(.monotone)
                     }
                     if let rate = sample.uploadRate {
-                        LineMark(x: .value("Time", sample.date), y: .value("Speed", rate), series: .value("Flow", "Upload"))
+                        LineMark(x: .value("Time", sample.date), y: .value("Speed", rate), series: .value("Flow", "Upload \(point.segment)"))
                             .foregroundStyle(.orange)
                             .interpolationMethod(.monotone)
                     }
@@ -181,12 +197,13 @@ struct DashboardView<Accessory: View>: View {
         let hovered = sample(near: connectionsHover)
         return ChartCard(title: "Connections", detail: "Open connections through sing-box", legend: []) {
             Chart {
-                ForEach(visibleSamples) { sample in
+                ForEach(points) { point in
+                    let sample = point.sample
                     if let connections = sample.connections {
-                        AreaMark(x: .value("Time", sample.date), y: .value("Connections", connections))
+                        AreaMark(x: .value("Time", sample.date), y: .value("Connections", connections), series: .value("Segment", point.segment))
                             .foregroundStyle(LinearGradient(colors: [.green.opacity(0.3), .green.opacity(0.02)], startPoint: .top, endPoint: .bottom))
                             .interpolationMethod(.monotone)
-                        LineMark(x: .value("Time", sample.date), y: .value("Connections", connections))
+                        LineMark(x: .value("Time", sample.date), y: .value("Connections", connections), series: .value("Segment", point.segment))
                             .foregroundStyle(.green)
                             .interpolationMethod(.monotone)
                     }
@@ -207,9 +224,10 @@ struct DashboardView<Accessory: View>: View {
         let hovered = sample(near: memoryHover)
         return ChartCard(title: "sing-box Memory", detail: "Resident memory of the process, as skeen reports", legend: []) {
             Chart {
-                ForEach(visibleSamples) { sample in
+                ForEach(points) { point in
+                    let sample = point.sample
                     if let memory = sample.memoryMB {
-                        LineMark(x: .value("Time", sample.date), y: .value("MB", memory))
+                        LineMark(x: .value("Time", sample.date), y: .value("MB", memory), series: .value("Segment", point.segment))
                             .foregroundStyle(.purple)
                             .interpolationMethod(.stepEnd)
                     }
@@ -264,14 +282,18 @@ struct DashboardView<Accessory: View>: View {
         }
     }
 
-    /// Each sample stretched to the next one, so the strip has no gaps.
+    /// Each sample stretched to the next one, so the strip has no seams,
+    /// but never across a pause in the readings.
     private var spans: [PhaseSpan] {
         let samples = visibleSamples
+        let width = max(bucketWidth, 15)
+        let maxGap = maxGap
         return samples.indices.map { index in
             let start = samples[index].date
-            let end = index + 1 < samples.count ? samples[index + 1].date : start.addingTimeInterval(15)
-            // A second of overlap hides hairline seams between neighbors.
-            return PhaseSpan(start: start, end: min(end, start.addingTimeInterval(3_600)).addingTimeInterval(1), phase: samples[index].phase)
+            let next = index + 1 < samples.count ? samples[index + 1].date : start.addingTimeInterval(width)
+            let end = next.timeIntervalSince(start) > maxGap ? start.addingTimeInterval(width) : next
+            // A hairline of overlap hides seams between neighbors.
+            return PhaseSpan(start: start, end: end.addingTimeInterval(width / 15), phase: samples[index].phase)
         }
     }
 
