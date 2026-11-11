@@ -63,6 +63,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         return false
     }
 
+    /// Writes the chart history before quitting, so the last minute survives.
+    func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
+        guard let store, !DemoMode.isOn else { return .terminateNow }
+        Task {
+            await store.send(.monitor(.saveHistory)).finish()
+            sender.reply(toApplicationShouldTerminate: true)
+        }
+        return .terminateLater
+    }
+
     func applicationSupportsSecureRestorableState(_ app: NSApplication) -> Bool {
         true
     }
