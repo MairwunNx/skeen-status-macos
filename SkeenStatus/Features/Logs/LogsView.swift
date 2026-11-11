@@ -73,6 +73,7 @@ struct LogsView: View {
     private var placeholder: String {
         if store.error != nil { return String(localized: "Can’t fetch the log") }
         if !store.lines.isEmpty { return String(localized: "Nothing found") }
+        if store.lastUpdate != nil { return String(localized: "The log is empty") }
         return String(localized: "Loading the log…")
     }
 

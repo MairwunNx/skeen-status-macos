@@ -1558,6 +1558,16 @@
         }
       }
     },
+    "The log is empty": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Лог пуст"
+          }
+        }
+      }
+    },
     "The new language shows after a relaunch.": {
       "localizations": {
         "ru": {
