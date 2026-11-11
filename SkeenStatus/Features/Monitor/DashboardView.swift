@@ -303,7 +303,7 @@ struct DashboardView<Accessory: View>: View {
             .foregroundStyle(.secondary.opacity(0.5))
             .lineStyle(StrokeStyle(lineWidth: 1, dash: [3, 3]))
             .annotation(position: .top, spacing: 4, overflowResolution: .init(x: .fit(to: .chart), y: .disabled)) {
-                ChartTooltip(time: timeString(sample.date), lines: lines)
+                ChartTooltip(time: chartTimeString(sample.date, bucketWidth: bucketWidth), lines: lines)
             }
     }
 

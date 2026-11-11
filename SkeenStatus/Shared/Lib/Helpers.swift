@@ -24,6 +24,30 @@ func timeString(_ date: Date, calendar: Calendar = .current) -> String {
     return String(format: "%02d:%02d:%02d", c.hour ?? 0, c.minute ?? 0, c.second ?? 0)
 }
 
+/// When a chart point happened, as precise as its bucket: the time alone for
+/// today, the day as well for anything older, and seconds only when the
+/// bucket is shorter than a minute.
+func chartTimeString(
+    _ date: Date,
+    bucketWidth: TimeInterval,
+    now: Date = Date(),
+    calendar: Calendar = .current,
+    locale: Locale = .current
+) -> String {
+    var style = Date.FormatStyle(locale: locale, calendar: calendar, timeZone: calendar.timeZone)
+    if !calendar.isDate(date, inSameDayAs: now) {
+        style = style.day().month(.abbreviated)
+        if !calendar.isDate(date, equalTo: now, toGranularity: .year) {
+            style = style.year()
+        }
+    }
+    if bucketWidth < 86_400 {
+        style = style.hour().minute()
+        if bucketWidth < 60 { style = style.second() }
+    }
+    return date.formatted(style)
+}
+
 /// Short duration such as “3 d 4 h”, “12 min”, or “40 s”, in the app’s language.
 func durationString(_ interval: TimeInterval) -> String {
     let seconds = max(0, Int(interval.rounded()))
