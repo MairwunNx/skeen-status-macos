@@ -10,7 +10,11 @@ The app keeps one SSH session to the router and asks `skeen status` every 15 sec
 
 [Русская версия](README.RU.md)
 
-![The overview: status orb, tiles, and charts](media/screenshot-overview.png)
+<p align="center">
+  <img src="media/screenshot-overview.png" width="100%" alt="The overview: status orb, tiles, and charts">
+  <br>
+  <em>The overview: the status orb, key numbers, and charts from five minutes to all time.</em>
+</p>
 
 ## What you get
 
@@ -45,13 +49,35 @@ The app starts in the menu bar only and has no Dock icon. Open it again from Fin
 
 ## More screenshots
 
-| The menu | The sing-box log |
-| --- | --- |
-| ![The menu bar dropdown](media/screenshot-menu.png) | ![The live sing-box log](media/screenshot-logs.png) |
+<p align="center">
+  <img src="media/screenshot-menu.png" width="380" alt="The menu bar dropdown">
+  <br>
+  <em>The menu: the state, PID, memory, uptime, traffic, and the outbound in use.</em>
+</p>
 
-| Connection | Scripts | General |
-| --- | --- | --- |
-| ![Connection settings](media/screenshot-connection.png) | ![Scripts](media/screenshot-scripts.png) | ![General settings](media/screenshot-general.png) |
+<p align="center">
+  <img src="media/screenshot-logs.png" width="100%" alt="The live sing-box log">
+  <br>
+  <em>The sing-box log: a live tail with a search and a filter for warnings and errors.</em>
+</p>
+
+<p align="center">
+  <img src="media/screenshot-connection.png" width="100%" alt="Connection settings">
+  <br>
+  <em>Connection: the router’s login, the commands after login, how the app reads the status, and the Clash API.</em>
+</p>
+
+<p align="center">
+  <img src="media/screenshot-scripts.png" width="100%" alt="Scripts">
+  <br>
+  <em>Scripts: shell commands that run on this Mac when skeen stops or runs again.</em>
+</p>
+
+<p align="center">
+  <img src="media/screenshot-general.png" width="100%" alt="General settings">
+  <br>
+  <em>General: the language, notifications, open at login, and moving the settings to another Mac.</em>
+</p>
 
 ## How it tells running from stopped
 

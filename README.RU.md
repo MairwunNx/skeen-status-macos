@@ -10,7 +10,11 @@
 
 [English version](README.md)
 
-![Обзор: шар состояния, плитки и графики](media/ru/screenshot-overview.png)
+<p align="center">
+  <img src="media/ru/screenshot-overview.png" width="100%" alt="Обзор: шар состояния, плитки и графики">
+  <br>
+  <em>Обзор: шар состояния, главные цифры и графики от пяти минут до всего времени.</em>
+</p>
 
 ## Что вы получите
 
@@ -45,13 +49,35 @@
 
 ## Ещё скриншоты
 
-| Меню | Лог sing-box |
-| --- | --- |
-| ![Выпадающее меню](media/ru/screenshot-menu.png) | ![Живой лог sing-box](media/ru/screenshot-logs.png) |
+<p align="center">
+  <img src="media/ru/screenshot-menu.png" width="380" alt="Выпадающее меню">
+  <br>
+  <em>Меню: состояние, PID, память, время работы, трафик и текущий выход.</em>
+</p>
 
-| Подключение | Сценарии | Общие |
-| --- | --- | --- |
-| ![Настройки подключения](media/ru/screenshot-connection.png) | ![Сценарии](media/ru/screenshot-scripts.png) | ![Общие настройки](media/ru/screenshot-general.png) |
+<p align="center">
+  <img src="media/ru/screenshot-logs.png" width="100%" alt="Живой лог sing-box">
+  <br>
+  <em>Лог sing-box: живой хвост, поиск и фильтр предупреждений и ошибок.</em>
+</p>
+
+<p align="center">
+  <img src="media/ru/screenshot-connection.png" width="100%" alt="Настройки подключения">
+  <br>
+  <em>Подключение: вход на роутер, команды после входа, проверка статуса и Clash API.</em>
+</p>
+
+<p align="center">
+  <img src="media/ru/screenshot-scripts.png" width="100%" alt="Сценарии">
+  <br>
+  <em>Сценарии: shell-команды, которые выполняются на этом Mac, когда skeen падает или поднимается.</em>
+</p>
+
+<p align="center">
+  <img src="media/ru/screenshot-general.png" width="100%" alt="Общие настройки">
+  <br>
+  <em>Общие: язык, уведомления, запуск при входе и перенос настроек на другой Mac.</em>
+</p>
 
 ## Как приложение понимает, что skeen работает
 
